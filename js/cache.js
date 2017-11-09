@@ -1,5 +1,4 @@
 
-cache = new CacheObj();
 
 function intToHex(num) {
 	return num.toString(16);
@@ -43,50 +42,53 @@ class CacheObj {
 
 		var byteMaxValue = 256;
     
-		for (var i = 0; i < cacheLineCount; i++) {
+		for (var i = 0; i < this.cacheLineCount; i++) {
 			// Make the cache line.
 			var line = [];
-			for (var j = 0; j < wordsPerLine; j++) {
+			for (var j = 0; j < this.wordsPerLine; j++) {
 				var word = [];
-				for (var k = 0; k < wordSize; k++) {
-					var num = Math.random() * byteMaxvalue;
+				for (var k = 0; k < this.wordSize; k++) {
+					var num = Math.random() * byteMaxValue;
 					word.push(Math.floor(num));
 				}
 				line.push(word);
 			}
-			cacheLines.push(line);
+			this.cacheLines.push(line);
 		}
 	}
 
 	// Get stats about how the cache is currently set up.
 	getLineCount() {
-		return cacheLines.length();
+		return this.cacheLines.length;
 	}
 	getWordSize() {
-		return wordSize;
+		return this.wordSize;
 	}
 	getWordsPerLine() {
-		return wordsPerLine;
+		return this.wordsPerLine;
 	}
-	getBlockCount() {
-		return getWordSize() * getWordsperLine();
+	getBytesPerLine() {
+		return this.getWordSize() * this.getWordsPerLine();
 	}
 	getByteCount() {
-		return getBlockCount() * getLineCount();
+		return this.getBlockCount() * this.getLineCount();
+	}
+	getBlockCount() {
+		return this.getBytesPerLine();
 	}
 
 	// Get a particular line.
 	getLine(lineNum) {
-		if (lineNum >= getLineCount()) {
+		if (lineNum >= this.getLineCount()) {
 			console.log("Out of bounds access in getLine! this: " + this + " line: " + lineNum);
 			return null;
 		}
-		return cacheLines[lineNum];
+		return this.cacheLines[lineNum];
 	}
 
 	// Get a particular line as a series of bytes, instead of as an object.
 	getBytes(lineNum) {
-		if (lineNum >= getLineCount()) {
+		if (lineNum >= this.getLineCount()) {
 			console.log("out of bounds access in getBytesInLine! this: " + this + " line: " + lineNum);
 			return null;
 		}
@@ -104,27 +106,90 @@ class CacheObj {
 
 	// Get a particular word in a line.
 	getWord(lineNum, wordIndex) {
-		if (wordIndex >= getWordsPerLine()) {
+		if (wordIndex >= this.getWordsPerLine()) {
 			console.log("Out of bounds access in getWord! this: " + this + " line: "
 					+ lineNum + " word: " + wordIndex);
 			return null;
 		}
-		var line = getLine(lineNum);
+		var line = this.getLine(lineNum);
 		return line[wordIndex];
 	}
 
-	// Get a particular byte in a line.
-	getByte(lineNum, wordIndex, byteIndex) {
-		if (byteIndex >= getWordSize()) {
+	// Get a particular byte in a line, indexed by word.
+	getByteByWord(lineNum, wordIndex, byteOffset) {
+		if (byteOffset >= this.getWordSize()) {
 			console.log("Out of bounds access in getByte! this: " + this + " line: "
-					+ lineNum + " word: " + wordInde + " byte: " + byteIndex);
+					+ lineNum + " word: " + wordInde + " byte: " + byteOffset);
 			return null;
 		}
-		var word = getWord(lineNum, wordIndex);
-		return word[byteIndex];
+		var word = this.getWord(lineNum, wordIndex);
+		return word[byteOffset];
 	}
-	
-	
+
+	// Get a particular byte in a line, indexed by byte.
+	getByte(lineNum, byteIndex) {
+		if (byteIndex >= this.getBytesPerLine()) {
+			console.log("Out of bounds access in getByte! this: " + this + " line: "
+					+ lineNum + " byte: " + byteIndex);
+		}
+		var wordIndex = Math.floor(byteIndex / this.getWordsPerLine());
+		var byteOffset = byteIndex % this.getWordsPerLine();
+		return getByteByWord(lineNum, wordIndex, byteOffset);
+	}
 }
 
+
+// Takes in a cache object, and turns it into an HTML table.
+function convertCacheToHTML(cache) {
+
+	// First, make the column headers. They're named for each word in the table.
+	// These headers span 4 columns.
+	var wordHeader = "<tr><th></th>";
+	for (var i = 0; i < cache.getWordsPerLine(); i++) {
+		var entry = "<th colspan='4'> Word " + i + " </th>";
+		wordHeader += entry;
+	}
+
+	// Next, make each byte colum header. They're named for their byte index.
+	var byteHeader = "<tr><th></th>";
+	for (var i = 0; i < cache.getBytesPerLine(); i++) {
+		var entry = "<th>" + i + "</th>";
+		byteHeader += entry;
+	}
+	
+	// Put together the header sections.
+	var header = "<thead>" + wordHeader + byteHeader + "</thead>";
+	
+	// Make each row.
+	var rows = "";
+	for (var lineNum = 0; lineNum < cache.getLineCount(); lineNum++) {
+		var row = "<tr><th>" + lineNum + "</th>";
+		// TODO: Style the CSS for each word differently.
+		for (var wordIndex = 0; wordIndex < cache.getWordsPerLine(); wordIndex++) {
+			var word = "";
+			for (var byteOffset = 0; byteOffset < cache.getWordSize(); byteOffset++) {
+				var value = cache.getByteByWord(lineNum, wordIndex, byteOffset);
+				word += "<td>" + intToHex(value) + "</td>";
+			}
+			row += word;
+		}
+		rows += row;
+	}
+	var body = "<tbody>" + rows + "</tbody>";
+
+	// Put together the whole table.
+	table = header + body;
+
+	return table;
+}
+
+var cache = new CacheObj();
+
+$('document').ready(
+	function() {
+		// Load the global cache into the grid UI
+		var html = convertCacheToHTML(cache);
+		console.log(cache);
+		$('#cache-grid')[0].innerHTML = html;
+	});
 
