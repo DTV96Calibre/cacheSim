@@ -1,4 +1,5 @@
 
+cache = new CacheObj();
 
 function intToHex(num) {
 	return num.toString(16);
@@ -19,7 +20,13 @@ function binToNum(binStr) {
 // Convenient list of powers of two, up to 2^max.
 function powers(max) {
 	var ret = [];
-	while 
+	var value = 2;
+	for (var i = 0; i < max; i++) {
+		ret.push(value);
+		value *= 2;
+	}
+
+	return ret;
 }
 
 // Constructs a cache object.
