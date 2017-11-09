@@ -1,4 +1,5 @@
 
+cache = new CacheObj();
 
 function intToHex(num) {
 	return num.toString(16);
