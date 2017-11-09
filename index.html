@@ -44,63 +44,104 @@
             <div class="row">
                 <!-- center left-->
                 <div class="col-md-6">
-                    <div class="well">Stuff can go here idk</div>
-
-                    <hr>
-
-                    <div class="btn-group btn-group-justified">
-                        <a href="#" class="btn btn-primary col-sm-3">
-                            <i class="glyphicon glyphicon-plus"></i>
-                            <br> Service
-                        </a>
-                        <a href="#" class="btn btn-primary col-sm-3">
-                            <i class="glyphicon glyphicon-cloud"></i>
-                            <br> Cloud
-                        </a>
-                        <a href="#" class="btn btn-primary col-sm-3">
-                            <i class="glyphicon glyphicon-cog"></i>
-                            <br> Tools
-                        </a>
-                        <a href="#" class="btn btn-primary col-sm-3">
-                            <i class="glyphicon glyphicon-question-sign"></i>
-                            <br> Help
-                        </a>
-                    </div>
-
-                    <hr>
-
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h4>show me what you got</h4></div>
-                        <div class="panel-body">
-
-                            <hr>
-
-                            <small>Hit Rate</small>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%">
-                                    <span class="sr-only">72% Complete</span>
-                                </div>
-                            </div>
-                            <small>Miss Rate</small>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                                    <span class="sr-only">80% Complete</span>
-                                </div>
+                            <div class="panel-title">
+                                <i class="glyphicon glyphicon-wrench pull-right"></i>
+                                <h4>Parameters</h4>
                             </div>
                         </div>
-                        <!--/panel-body-->
+                        <div class="panel-body">
+                            <form class="form form-vertical">
+                                <div class="control-group">
+                                    <!-- Dropdown menus -->
+                                    <div class="controls">
+                                        <!-- Word size select -->
+                                        <div class="col-sm-3">
+                                          <label for="word-size-options">Word Size:</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                          <select class="form-control" id="word-size-options">
+                                            <option>options</option>
+                                        </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                          <label>Byte Offset Bits:</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                          2
+                                        </div>
+                                        <br><br>
+                                        <!-- Block size -->
+                                        <div class="col-sm-3">
+                                          <label for="block-size-options">Block Size:</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                          <select class="form-control" id="block-size-options">
+                                            <option>options</option>
+                                        </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                          <label>Block Offset Bits:</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                          2
+                                        </div>
+                                        <br><br>
+                                        <!-- Lines of cache -->
+                                        <div class="col-sm-3">
+                                          <label for="index-size-options">Lines of Cache:</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                          <select class="form-control" id="index-size-options">
+                                            <option>options</option>
+                                        </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                          <label>Index Bits:</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                          3
+                                        </div>
+                                        <br><br>
+                                        <!-- Associativity -->
+                                        <div class="col-sm-3">
+                                          <label for="assoc-size-options">Associativity:</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                          <select class="form-control" id="assoc-size-options">
+                                            <option>1</option>
+                                        </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                          <label>Tag Bits:</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                          23
+                                        </div>
+                                    </div> <!-- /dropdowns -->
+                                </div>
+                                <br><br>
+                                <div align="center" class="control-group">
+                                    <label></label>
+                                    <div class="controls">
+                                        <button type="submit" class="btn btn-primary" style="width: 60%">
+                                            Update
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!--/panel content-->
                     </div>
                     <!--/panel-->
-
-                    <hr>
 
                     <!--tabs-->
                     <div class="panel">
                         <ul class="nav nav-tabs" id="myTab">
-                            <li class="active"><a href="#profile" data-toggle="tab">Tab 1</a></li>
-                            <li><a href="#messages" data-toggle="tab">Tab 2</a></li>
-                            <li><a href="#settings" data-toggle="tab">Tab 3</a></li>
+                            <li class="active"><a href="#profile" data-toggle="tab">CPU 1</a></li>
+                            <li><a href="#messages" data-toggle="tab">CPU 2</a></li>
+                            <li><a href="#settings" data-toggle="tab">CPU 3</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active well" id="profile">
@@ -108,12 +149,14 @@
                                 <p>Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis dolor, in sagittis nisi.</p>
                             </div>
                             <div class="tab-pane well" id="messages">
-                                <h4><i class="glyphicon glyphicon-comment"></i></h4> Message ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-                                <p>Quisque mauris augu.</p>
+                                <h4><i class="glyphicon glyphicon-comment"></i></h4> To be fair, you have to have a very high IQ to understand Rick and Morty. The humour is extremely subtle, and without a solid grasp of theoretical physics most of the jokes will go over a typical viewer’s head. There’s also Rick’s nihilistic outlook, which is deftly woven into his characterisation- his personal philosophy draws heavily from Narodnaya Volya literature, for instance. The fans understand this stuff; they have the intellectual capacity to truly appreciate the depths of these jokes, to realise that they’re not just funny- they say something deep about LIFE. As a consequence people who dislike Rick & Morty truly ARE idiots- of course they wouldn’t appreciate, for instance, the humour in Rick’s existential catchphrase “Wubba Lubba Dub Dub,” which itself is a cryptic reference to Turgenev’s Russian epic Fathers and Sons. I’m smirking right now just imagining one of those addlepated simpletons scratching their heads in confusion as Dan Harmon’s genius wit unfolds itself on their television screens. What fools.. how I pity them. 😂
+
+                                And yes, by the way, i DO have a Rick & Morty tattoo. And no, you cannot see it. It’s for the ladies’ eyes only- and even then they have to demonstrate that they’re within 5 IQ points of my own (preferably lower) beforehand. Nothin personnel kid 😎</p>
                             </div>
                             <div class="tab-pane well" id="settings">
-                                <h4><i class="glyphicon glyphicon-cog"></i></h4> Lorem settings dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-                                <p>Quisque mauris augue, molestie.</p>
+                                <h4><i class="glyphicon glyphicon-cog"></i></h4> 
+                                <img src="img/733956_1.jpg">
+                                <p>molestie</p>
                             </div>
                         </div>
 
@@ -131,44 +174,9 @@
                                 <button type="button" class="close" data-dismiss="alert">×</button>
                                 This is a dismissable alert.. just sayin'.
                             </div>
-                            <p>This is a dashboard-style layout that uses Bootstrap 3.
+                            <p>Cache me ousside, how bout dat
                         </div>
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="panel-title">
-                                <i class="glyphicon glyphicon-wrench pull-right"></i>
-                                <h4>Parameters</h4>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <form class="form form-vertical">
-                                <div class="control-group">
-                                    <!-- Dropdown menus -->
-                                    <div class="controls">
-                                        <label for="word-size-options">Word Size:</label>
-                                        <select class="form-control" id="word-size-options">
-                                            <option>options</option>
-                                        </select>
-                                        <label for="block-size-options">Block Size:</label>
-                                        <select class="form-control">
-                                            <option>options</option>
-                                        </select>
-                                    </div> <!-- /dropdowns -->
-                                </div>
-                                <div class="control-group">
-                                    <label></label>
-                                    <div class="controls">
-                                        <button type="submit" class="btn btn-primary">
-                                            Post
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <!--/panel content-->
-                    </div>
-                    <!--/panel-->
                     <div class="table-responsive">
                         <table class="table table-striped" id="cache-grid">
                             <thead>
@@ -207,9 +215,28 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Statistics</h4></div>
+                        <div class="panel-body">
+                            <small>Hit Rate</small>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%">
+                                    <span class="sr-only">72% Complete</span>
+                                </div>
+                            </div>
+                            <small>Miss Rate</small>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                    <span class="sr-only">80% Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/panel-body-->
+                    </div>
+                    <!--/panel-->
                 </div>
                 <!--/col-span-6-->
-
             </div>
             <!--/row-->
         </div>
