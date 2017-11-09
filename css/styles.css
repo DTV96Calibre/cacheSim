@@ -33,3 +33,9 @@ footer {
   -o-border-radius: 10px;
   border-radius: 10px;
 }
+
+.table-scrollable {
+  height: 30vh;
+  overflow: auto;
+  margin-bottom: 15px;
+}
