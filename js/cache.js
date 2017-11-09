@@ -1,7 +1,26 @@
 
 
+function intToHex(num) {
+	return num.toString(16);
+}
 
+function intToBinary(num) {
+	return num.toString(2);
+}
 
+function hexToNum(hexStr) {
+	return parseInt(hexStr, 16);
+}
+
+function binToNum(binStr) {
+	return parseInt(binStr, 2);
+}
+
+// Convenient list of powers of two, up to 2^max.
+function powers(max) {
+	var ret = [];
+	while 
+}
 
 // Constructs a cache object.
 class CacheObj {
@@ -66,9 +85,9 @@ class CacheObj {
 		}
 		var bytes = [];
 		var line = getLine(lineNum);
-		for (int i = 0; i < line.length(); i++) {
+		for (var i = 0; i < line.length(); i++) {
 			var word = line[i];
-			for (int j = 0; j < word.length(); j++) {
+			for (var j = 0; j < word.length(); j++) {
 				bytes.push(word[j]);
 			}
 		}
