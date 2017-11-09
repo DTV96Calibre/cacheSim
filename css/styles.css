@@ -33,3 +33,8 @@ footer {
   -o-border-radius: 10px;
   border-radius: 10px;
 }
+
+#word-size-options {
+    display: inline;
+    width: 40%;
+}
