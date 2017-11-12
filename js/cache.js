@@ -164,7 +164,6 @@ function convertCacheToHTML(cache) {
 	var rows = "";
 	for (var lineNum = 0; lineNum < cache.getLineCount(); lineNum++) {
 		var row = "<tr><th>" + lineNum + "</th>";
-		// TODO: Style the CSS for each word differently.
 		for (var wordIndex = 0; wordIndex < cache.getWordsPerLine(); wordIndex++) {
 			var word = "";
 			for (var byteOffset = 0; byteOffset < cache.getWordSize(); byteOffset++) {
