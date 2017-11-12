@@ -1,4 +1,10 @@
+/*
+  cache.js
+  https://github.com/DTV96Calibre/cacheSim
+*/
 
+// Seed for generating random values for the cache using the jsrand library
+var SEED = 10;
 
 function intToHex(num) {
 	return num.toString(16);
@@ -48,7 +54,7 @@ class CacheObj {
 			for (var j = 0; j < this.wordsPerLine; j++) {
 				var word = [];
 				for (var k = 0; k < this.wordSize; k++) {
-					var num = Math.random() * byteMaxValue;
+					var num = Srand.random() * byteMaxValue;
 					word.push(Math.floor(num));
 				}
 				line.push(word);
@@ -205,10 +211,12 @@ function setTableEntryColors(cache) {
     }
 }
 
-var cache = new CacheObj();
-
 $('document').ready(
 	function() {
+        Srand.seed(SEED);
+
+        var cache = new CacheObj();
+        
 		// Load the global cache into the grid UI
 		var html = convertCacheToHTML(cache);
 		console.log(cache);
