@@ -39,3 +39,8 @@ footer {
   overflow: auto;
   margin-bottom: 15px;
 }
+
+/* CSS for selected bytes in the cache grid. */
+.grid-byte-selected {
+	border: 2px solid black;
+}

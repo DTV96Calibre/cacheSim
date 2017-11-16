@@ -187,7 +187,6 @@ function convertCacheToHTML(cache) {
 	
 	// Make each row.
 	var rows = "";
-	var mouseover = "onMouseOver='gridMouseOver(this)'";
 	for (var lineNum = 0; lineNum < cache.getLineCount(); lineNum++) {
 		var row = "<tr><th>" + lineNum + "</th>";
 		for (var wordIndex = 0; wordIndex < cache.getWordsPerLine(); wordIndex++) {
@@ -196,6 +195,8 @@ function convertCacheToHTML(cache) {
 				var value = cache.getByteByWord(lineNum, wordIndex, byteOffset);
 				var valueStr = intToHex(value, 2);
 				var id = byteToId(lineNum, wordIndex, byteOffset);
+				var addressDisplay = intToHex(cache.getWord(lineNum, wordIndex).getAddress(), 8);
+				var mouseover = "onmousedown='gridMouseClick(this)'";
 				word += "<td id='" + id + "' " + mouseover + ">" + valueStr + "</td>";
 			}
 			row += word;
@@ -224,7 +225,7 @@ function setTableEntryColors(cache) {
     for (var line = 0; line < numLines; line++) {
         for (var word = 0; word < numWords; word++) {
             for (var byte = 0; byte < numBytes; byte++) {
-                var id = "#" + line + "-" + word + "-" + byte;
+                var id = "#" + byteToId(line, word, byte);
                 $(id).css("background-color", colors[word % colors.length]);
                 $(id).css("border-top", "1 px solid black");
             }
@@ -256,14 +257,14 @@ $('document').ready(
 		originalInstructionTabTitle = $('#instructions-title')[0].innerHTML;
 		originalInstructionTabText = $('#instructions-body')[0].innerHTML;
 
-
+		// Enable all tooltips in the cache table.
+		//$("td").tooltip();
+		$("[data-toggle='tooltip']").tooltip();
 	});
 
-// This function is called by the UI whenever the mouse hovers over an entry.
-function gridMouseOver(source) {
-	// Overwrite the current instruction tab with stuff.
-	$('#instructions-title')[0].innerHTML = "Detailed info";
-	byteId = idToByte(source.id);
+function getByteInfoHTML(idStr) {
+
+	byteId = idToByte(idStr);
 	var lineNum = byteId.lineNum;
 	var wordIndex = byteId.wordIndex;
 	var byteOffset = byteId.byteOffset;
@@ -273,17 +274,39 @@ function gridMouseOver(source) {
 	var wordIndexDisplay = "<b>Word Index: </b>" + wordIndex;
 	var wordAddressDisplay = "<b>Word Address: </b>" + intToHex(wordAddress, 8);
 	var byteOffsetDisplay = "<b>Byte Offset: </b>" + byteOffset;
-	var display = "<p>" + lineNumDisplay + "</br>" + wordIndexDisplay + "</br>" + byteOffsetDisplay + "</p>";
-	display += "<p>" + wordAddressDisplay + "</p>";
-	$('#instructions-body')[0].innerHTML = display;
+	var html = "<p>" + lineNumDisplay + "</br>" + wordIndexDisplay + "</br>" + byteOffsetDisplay + "</p>";
+	html += "<p>" + wordAddressDisplay + "</p>";
+
+	return html;
 }
 
-// This function is called by the UI whenever the mouse leaves the cache grid.
-// FIXME: Technically this could be called before document.onReady fires. Make some
-//        kind of sanity check first.
-function gridMouseExit() {
+function replaceInstructions(html) {
+	// Overwrite the current instruction tab with stuff.
+	$('#instructions-title')[0].innerHTML = "Detailed info";
+	$('#instructions-body')[0].innerHTML = html;
+}
+
+function restoreInstructions() {
 	// Restore the instruction stuff.
 	$('#instructions-title')[0].innerHTML = originalInstructionTabTitle;
 	$('#instructions-body')[0].innerHTML = originalInstructionTabText;
+}
+
+function gridMouseClick(source) {
+	
+	
+	// Deselect anything already selected.
+	prevSelection = $('.grid-byte-selected')[0];
+	if (prevSelection != undefined) {
+		prevSelection.classList.remove("grid-byte-selected");
+	}
+
+	// Check if the user just clicked the same element as before.
+	if (source == prevSelection) {
+		restoreInstructions();
+	} else {
+		source.classList.add("grid-byte-selected");
+		replaceInstructions(getByteInfoHTML(source.id));
+	}
 }
 
