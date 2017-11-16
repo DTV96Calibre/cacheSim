@@ -6,11 +6,32 @@
 // A collection of utility functions that may be useful in cache.js and elsewhere.
 
 function intToHex(num) {
+	console.log("Warning! Use intToHex(num, length) instead!");
 	return num.toString(16);
 }
 
+// Returns num as a hexadecimal string, padded to length characters by adding leading
+// 0's.
+function intToHex(num, length) {
+	var ret = num.toString(16);
+	while (ret.length < length) {
+		ret = '0' + ret;
+	}
+	return ret;
+}
+
 function intToBinary(num) {
+	console.log("Warning! Use intToBinary(num, length) instead!");
 	return num.toString(2);
+}
+
+// Returns num as a binary string, padded to length characters by adding leading 0's.
+function intToBinary(num, length) {
+	var ret = num.toString(2);
+	while (ret.length < length) {
+		ret = '0' + ret;
+	}
+	return ret;
 }
 
 function hexToNum(hexStr) {

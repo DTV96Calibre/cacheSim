@@ -194,8 +194,9 @@ function convertCacheToHTML(cache) {
 			var word = "";
 			for (var byteOffset = 0; byteOffset < cache.getWordSize(); byteOffset++) {
 				var value = cache.getByteByWord(lineNum, wordIndex, byteOffset);
+				var valueStr = intToHex(value, 2);
 				var id = byteToId(lineNum, wordIndex, byteOffset);
-				word += "<td id='" + id + "' " + mouseover + ">" + intToHex(value) + "</td>";
+				word += "<td id='" + id + "' " + mouseover + ">" + valueStr + "</td>";
 			}
 			row += word;
         }
@@ -252,8 +253,10 @@ $('document').ready(
 		// Save the contents of the instructions tab in a variable. The contents
 		// the instruction tab are overwritten whenever the user mouses over an
 		// entry in the cache; but are restored when the user isn't mousing over anything.
-		originalInstructionTabTitle = $('#instructions-title').innerHTML;
-		originalInstructionTabText = $('#instructions-body').innerHTML;
+		originalInstructionTabTitle = $('#instructions-title')[0].innerHTML;
+		originalInstructionTabText = $('#instructions-body')[0].innerHTML;
+
+
 	});
 
 // This function is called by the UI whenever the mouse hovers over an entry.
@@ -268,12 +271,19 @@ function gridMouseOver(source) {
 
 	var lineNumDisplay = "<b>Line Number: </b>" + lineNum;
 	var wordIndexDisplay = "<b>Word Index: </b>" + wordIndex;
-	var wordAddressDisplay = "<b>Word Address: </b>" + intToHex(wordAddress);
+	var wordAddressDisplay = "<b>Word Address: </b>" + intToHex(wordAddress, 8);
 	var byteOffsetDisplay = "<b>Byte Offset: </b>" + byteOffset;
 	var display = "<p>" + lineNumDisplay + "</br>" + wordIndexDisplay + "</br>" + byteOffsetDisplay + "</p>";
 	display += "<p>" + wordAddressDisplay + "</p>";
 	$('#instructions-body')[0].innerHTML = display;
 }
 
-
+// This function is called by the UI whenever the mouse leaves the cache grid.
+// FIXME: Technically this could be called before document.onReady fires. Make some
+//        kind of sanity check first.
+function gridMouseExit() {
+	// Restore the instruction stuff.
+	$('#instructions-title')[0].innerHTML = originalInstructionTabTitle;
+	$('#instructions-body')[0].innerHTML = originalInstructionTabText;
+}
 
