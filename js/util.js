@@ -5,6 +5,14 @@
 
 // A collection of utility functions that may be useful in cache.js and elsewhere.
 
+// Given a number of bits, this function will make a bitmask with that many bits.
+function getMask(maskSize) {
+	// This first bit-shifts until there is a 1 just after where the mask should
+	// end, and the rest is 0. Then it subtracts one, which turns all the 0's
+	// before the 1 into 1's; therefore, there will be maskSize ones.
+	return (1 << (maskSize + 1)) - 1;
+}
+
 function intToHex(num) {
 	console.log("Warning! Use intToHex(num, length) instead!");
 	return num.toString(16);

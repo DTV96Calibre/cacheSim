@@ -6,9 +6,10 @@ class WordEntry {
 
 	// address is the 32bit pointer to where it originally
 	// came from in memory.
-	constructor(bytes, address) {
+	constructor(bytes, address, parentCache) {
 		this.bytes = bytes;
 		this.address = address;
+		this.parentCache = parentCache;
 	}
 
 	getBytes() {
@@ -22,6 +23,20 @@ class WordEntry {
 	}
 	getAddress() {
 		return this.address;
+	}
+	getTag() {
+		var tagSize = this.parentCache.getTagSize();
+		var indexSize = this.parentCache.getIndexSize();
+		var offsetSize = this.parentCache.getByteOffsetSize();
+		var tagMask = getMask(tagSize);
+		var tagOffset = indexSize + offsetSize;
+		return (this.address >> tagOffset) & tagMask;
+	}
+	getIndex() {
+		var indexSize = this.parentCache.getIndexSize();
+		var offsetSize = this.parentCache.getByteOffsetSize();
+		var indexMask = getMask(indexSize);
+		return (this.address >> offsetSize) & indexMask;
 	}
 }
 
@@ -76,6 +91,47 @@ class CacheObj {
 	getBlockCount() {
 		return this.getBytesPerLine();
 	}
+
+	// Get stats about how to split up the cache address.
+	// The values these functions return are cached.
+	getByteOffsetSize_raw() {
+		var size = getWordSize();
+		var bits = Math.floor(Math.log(size));
+		if ((1 << bits) != size) {
+			console.log("Error: getWordSize() didn't return a power of two: " + size);
+		}
+		return bits;
+	}
+	getBlockOffsetSize() {
+		if (self._getByteOffsetSize === undefined) {
+			self._getByteOffsetSize = getByteOffsetSize_raw();
+		}
+		return self._getByteOffsetSize;
+	}
+	getIndexSize_raw() {
+		var size = getWordsPerLine();
+		var bits = Math.floor(Math.log(size));
+		if ((1 << bits) != size) {
+			console.log("Error: getWordsPerLine didn't return a power of two: " + size);
+		}
+		return bits;
+	}
+	getIndexSize() {
+		if (self._getIndexSize === undefined) {
+			self._getIndexSize = getIndexSize_raw();
+		}
+		return self._getIndexSize;
+	}
+	getTagSize() {
+		var size = getAddressSize;
+		return size - getIndexSize() - getByteOffsetSize();
+	}
+	getAddressSize() {
+		var bitsPerByte = 8;
+		return getWordSize() * bitsPerByte;
+	}
+
+
 
 	// Get a particular line.
 	getLine(lineNum) {
