@@ -6,12 +6,35 @@
 // Seed for generating random values for the cache using the jsrand library
 var SEED = 10;
 
+class WordEntry {
+
+	// address is the 32bit pointer to where it originally
+	// came from in memory.
+	constructor(bytes, address) {
+		this.bytes = bytes;
+		this.address = address;
+	}
+
+	getBytes() {
+		return this.bytes;
+	}
+	getByte(byteOffset) {
+		return this.bytes[byteOffset];
+	}
+	getSize() {
+		return this.bytes.length();
+	}
+	getAddress() {
+		return this.address;
+	}
+}
+
 // Constructs a cache object.
 class CacheObj {
 	
 	constructor() {
-		// Each entry in cacheLines is an array of words,
-		// which are arrays of bytes.
+		// Each entry in cacheLines is an array of WordEntries.
+		// WordEntry has an array of bytes and an address.
 		this.cacheLines = [];
     
 		this.wordSize = 4;
@@ -19,16 +42,19 @@ class CacheObj {
 		this.cacheLineCount = 64;
 
 		var byteMaxValue = 256;
-    
+		var addressMaxValue = Math.pow(2, 24);
+   		 
 		for (var i = 0; i < this.cacheLineCount; i++) {
 			// Make the cache line.
 			var line = [];
 			for (var j = 0; j < this.wordsPerLine; j++) {
-				var word = [];
+				var bytes = [];
 				for (var k = 0; k < this.wordSize; k++) {
 					var num = Srand.random() * byteMaxValue;
-					word.push(Math.floor(num));
+					bytes.push(Math.floor(num));
 				}
+				var address = Math.floor(Srand.random() * addressMaxValue);
+				var word = new WordEntry(bytes, address);
 				line.push(word);
 			}
 			this.cacheLines.push(line);
@@ -74,8 +100,8 @@ class CacheObj {
 		var line = getLine(lineNum);
 		for (var i = 0; i < line.length(); i++) {
 			var word = line[i];
-			for (var j = 0; j < word.length(); j++) {
-				bytes.push(word[j]);
+			for (var j = 0; j < word.getSize(); j++) {
+				bytes.push(word.getByte(j));
 			}
 		}
 
@@ -101,7 +127,7 @@ class CacheObj {
 			return null;
 		}
 		var word = this.getWord(lineNum, wordIndex);
-		return word[byteOffset];
+		return word.getByte(byteOffset);
 	}
 
 	// Get a particular byte in a line, indexed by byte.
@@ -114,6 +140,27 @@ class CacheObj {
 		var byteOffset = byteIndex % this.getWordsPerLine();
 		return getByteByWord(lineNum, wordIndex, byteOffset);
 	}
+}
+
+// These two functions are used to encode a byte into a unique ID, and back again.
+function byteToId(lineNum, wordIndex, byteOffset) {
+	var id = lineNum + "-" + wordIndex + "-" + byteOffset;
+	return id;
+}
+function idToByte(idStr) {
+	// This returns [junk, lineNum, wordIndex, byteOffset] as a string array.
+	var matches = idStr.match("(\\d+)-(\\d+)-(\\d+)");
+	if (matches.length != 4) {
+		console.log("Error in idToByte: Not a valid byte id string: '" + idStr + "'");
+	}
+	var lineNum = parseInt(matches[1]);
+	var wordIndex = parseInt(matches[2]);
+	var byteOffset = parseInt(matches[3]);
+	return {
+		lineNum: lineNum,
+		wordIndex: wordIndex,
+		byteOffset: byteOffset
+	};
 }
 
 
@@ -140,14 +187,15 @@ function convertCacheToHTML(cache) {
 	
 	// Make each row.
 	var rows = "";
+	var mouseover = "onMouseOver='gridMouseOver(this)'";
 	for (var lineNum = 0; lineNum < cache.getLineCount(); lineNum++) {
 		var row = "<tr><th>" + lineNum + "</th>";
 		for (var wordIndex = 0; wordIndex < cache.getWordsPerLine(); wordIndex++) {
 			var word = "";
 			for (var byteOffset = 0; byteOffset < cache.getWordSize(); byteOffset++) {
 				var value = cache.getByteByWord(lineNum, wordIndex, byteOffset);
-				var id = lineNum + "-" + wordIndex + "-" + byteOffset;
-				word += "<td id='" + id + "'>" + intToHex(value) + "</td>";
+				var id = byteToId(lineNum, wordIndex, byteOffset);
+				word += "<td id='" + id + "' " + mouseover + ">" + intToHex(value) + "</td>";
 			}
 			row += word;
         }
@@ -183,17 +231,49 @@ function setTableEntryColors(cache) {
     }
 }
 
+
+// Set up the initial cache.
+var globalCache;
+var originalInstructionTabTitle;
+var originalInstructionTabText;
 $('document').ready(
 	function() {
         Srand.seed(SEED);
 
-        var cache = new CacheObj();
+        globalCache = new CacheObj();
         
 		// Load the global cache into the grid UI
-		var html = convertCacheToHTML(cache);
-		console.log(cache);
+		var html = convertCacheToHTML(globalCache);
 		$('#cache-grid')[0].innerHTML = html;
 
         // Make table more readable by modifying CSS
-		setTableEntryColors(cache);
+		setTableEntryColors(globalCache);
+
+		// Save the contents of the instructions tab in a variable. The contents
+		// the instruction tab are overwritten whenever the user mouses over an
+		// entry in the cache; but are restored when the user isn't mousing over anything.
+		originalInstructionTabTitle = $('#instructions-title').innerHTML;
+		originalInstructionTabText = $('#instructions-body').innerHTML;
 	});
+
+// This function is called by the UI whenever the mouse hovers over an entry.
+function gridMouseOver(source) {
+	// Overwrite the current instruction tab with stuff.
+	$('#instructions-title')[0].innerHTML = "Detailed info";
+	byteId = idToByte(source.id);
+	var lineNum = byteId.lineNum;
+	var wordIndex = byteId.wordIndex;
+	var byteOffset = byteId.byteOffset;
+	var wordAddress = globalCache.getWord(lineNum, wordIndex).getAddress();
+
+	var lineNumDisplay = "<b>Line Number: </b>" + lineNum;
+	var wordIndexDisplay = "<b>Word Index: </b>" + wordIndex;
+	var wordAddressDisplay = "<b>Word Address: </b>" + intToHex(wordAddress);
+	var byteOffsetDisplay = "<b>Byte Offset: </b>" + byteOffset;
+	var display = "<p>" + lineNumDisplay + "</br>" + wordIndexDisplay + "</br>" + byteOffsetDisplay + "</p>";
+	display += "<p>" + wordAddressDisplay + "</p>";
+	$('#instructions-body')[0].innerHTML = display;
+}
+
+
+
