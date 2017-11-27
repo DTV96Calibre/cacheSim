@@ -193,7 +193,3 @@ class CacheObj {
 		return getByteByWord(lineNum, wordIndex, byteOffset);
 	}
 }
-
-
-
-

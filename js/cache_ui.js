@@ -3,12 +3,12 @@
   https://github.com/DTV96Calibre/cacheSim
 */
 
-
 // These two functions are used to encode a byte into a unique ID, and back again.
 function byteToId(lineNum, wordIndex, byteOffset) {
 	var id = lineNum + "-" + wordIndex + "-" + byteOffset;
 	return id;
 }
+
 function idToByte(idStr) {
 	// This returns [junk, lineNum, wordIndex, byteOffset] as a string array.
 	var matches = idStr.match("(\\d+)-(\\d+)-(\\d+)");
@@ -89,7 +89,6 @@ function setTableEntryColors(cache) {
             for (var byte = 0; byte < numBytes; byte++) {
                 var id = "#" + byteToId(line, word, byte);
                 $(id).css("background-color", colors[word % colors.length]);
-                $(id).css("border-top", "1 px solid black");
             }
         }
     }
@@ -155,7 +154,6 @@ function restoreInstructions() {
 }
 
 function gridMouseClick(source) {
-	
 	
 	// Deselect anything already selected.
 	prevSelection = $('.grid-byte-selected')[0];
