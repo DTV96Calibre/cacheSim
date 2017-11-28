@@ -43,14 +43,14 @@ class WordEntry {
 // Constructs a cache object.
 class CacheObj {
 
-	constructor() {
+	constructor(wordSize, wordsPerLine, cacheLineCount) {
 		// Each entry in cacheLines is an array of WordEntries.
 		// WordEntry has an array of bytes and an address.
 		this.cacheLines = [];
 
-		this.wordSize = 4;
-		this.wordsPerLine = 4;
-		this.cacheLineCount = 64;
+		this.wordSize = wordSize;
+		this.wordsPerLine = wordsPerLine;
+		this.cacheLineCount = cacheLineCount;
 
 		var byteMaxValue = 256;
 		var addressMaxValue = Math.pow(2, 24);
