@@ -42,19 +42,23 @@ class WordEntry {
 
 // Constructs a cache object.
 class CacheObj {
-	
+
 	constructor() {
 		// Each entry in cacheLines is an array of WordEntries.
 		// WordEntry has an array of bytes and an address.
 		this.cacheLines = [];
-    
+
 		this.wordSize = 4;
 		this.wordsPerLine = 4;
 		this.cacheLineCount = 64;
 
 		var byteMaxValue = 256;
 		var addressMaxValue = Math.pow(2, 24);
-   		 
+		this.generateCacheLines();
+
+	}
+
+	generateCacheLines(){
 		for (var i = 0; i < this.cacheLineCount; i++) {
 			// Make the cache line.
 			var line = [];
@@ -90,6 +94,19 @@ class CacheObj {
 	}
 	getBlockCount() {
 		return this.getBytesPerLine();
+	}
+
+	setLineCount(n) {
+		this.cacheLineCount = n;
+		this.generateCacheLines();
+	}
+	setWordSize(n) {
+		this.wordSize = n;
+		this.generateCacheLines();
+	}
+	setWordsPerLine(n) {
+		this.wordsPerLine = n;
+		this.generateCacheLines();
 	}
 
 	// Get stats about how to split up the cache address.
