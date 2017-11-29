@@ -129,14 +129,20 @@ function getByteInfoHTML(idStr) {
 	var lineNum = byteId.lineNum;
 	var wordIndex = byteId.wordIndex;
 	var byteOffset = byteId.byteOffset;
-	var wordAddress = globalCache.getWord(lineNum, wordIndex).getAddress();
+	
+	var wordObject = globalCache.getWord(lineNum, wordIndex);
+	var wordAddress = wordObject.getAddress();
+	var tag = wordObject.getTag();
 
 	var lineNumDisplay = "<b>Line Number: </b>" + lineNum;
 	var wordIndexDisplay = "<b>Word Index: </b>" + wordIndex;
+	// TODO: This should use getAddressSize() to calculate the number of hex digits.
 	var wordAddressDisplay = "<b>Word Address: </b>" + intToHex(wordAddress, 8);
 	var byteOffsetDisplay = "<b>Byte Offset: </b>" + byteOffset;
+	// TODO: This should use getTagSize() to calculate the number of hex digits.
+	var tagDisplay = "<b>Tag: </b>" + intToHex(tag, 8);
 	var html = "<p>" + lineNumDisplay + "</br>" + wordIndexDisplay + "</br>" + byteOffsetDisplay + "</p>";
-	html += "<p>" + wordAddressDisplay + "</p>";
+	html += "<p>" + wordAddressDisplay + "</br>" + tagDisplay + "</p>";
 
 	return html;
 }
