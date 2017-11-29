@@ -2,14 +2,28 @@
 // Seed for generating random values for the cache using the jsrand library
 var SEED = 10;
 
+// The MSI state enum.
+var MsiState = {
+	Modified: 1,
+	Shared: 2,
+	Invalid: 3
+}
+
 class WordEntry {
 
 	// address is the 32bit pointer to where it originally
 	// came from in memory.
+	// Note: Words initialize as Invalid.
 	constructor(bytes, address, parentCache) {
 		this.bytes = bytes;
 		this.address = address;
 		this.parentCache = parentCache;
+
+		// MSI state is kept on a per-word basis.
+		// TODO: Initialize as Invalid instead of Shared.
+		// This has to wait until the cache and main memory
+		// are separated.
+		this.state = MsiState.Shared;
 	}
 
 	getBytes() {
@@ -38,6 +52,41 @@ class WordEntry {
 		var indexMask = getMask(indexSize);
 		return (this.address >> offsetSize) & indexMask;
 	}
+	getState() {
+		return this.state;
+	}
+
+	// These are methods to control the MSI state, assuming this
+	// word is still pointing at the same address. If assigning
+	// a new address, use changeWord() instead.
+	setInvalid() {
+		this.state = MsiState.Invalid;
+	}
+	setShared() {
+		this.state = MsiState.Shared;
+	}
+	setModified(newBytes) {
+		if (this.state == MsiState.Invalid) {
+			console.log("Error: Attempting to modify Invalid word! Use changeWord() instead.");
+		}
+		this.state = MsiState.Modified;
+		this.bytes = newBytes;
+	}
+
+	// This method changes the address and corresponding data that
+	// the word object is tracking. isModified should be set to true
+	// if this word fetched from main memory due to a Write; it should
+	// be false if it was due to a Read.
+	changeWord(bytes, address, isModified) {
+		this.bytes = bytes;
+		this.address = address;
+		if (isModified) {
+			this.state = MsiState.Modified;
+		} else {
+			this.state = MsiState.Shared;
+		}
+	}
+
 }
 
 // Constructs a cache object.
