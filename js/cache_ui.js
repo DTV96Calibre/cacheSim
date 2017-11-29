@@ -3,6 +3,11 @@
   https://github.com/DTV96Calibre/cacheSim
 */
 
+// Set up the initial cache.
+var globalCache;
+var originalInstructionTabTitle;
+var originalInstructionTabText;
+
 // These two functions are used to encode a byte into a unique ID, and back again.
 function byteToId(lineNum, wordIndex, byteOffset) {
 	var id = lineNum + "-" + wordIndex + "-" + byteOffset;
@@ -24,7 +29,6 @@ function idToByte(idStr) {
 		byteOffset: byteOffset
 	};
 }
-
 
 // Takes in a cache object, and turns it into an HTML table.
 function convertCacheToHTML(cache) {
@@ -96,29 +100,38 @@ function setTableEntryColors(cache) {
 
 // Reads the user-selected word size from the corresponding dropdown.
 function getWordSize() {
-	var wordSizeSelector = document.getElementById("word-size-options").selectedIndex;
-	var wordSize = document.getElementsByTagName("option")[wordSizeSelector].value;
+	var wordSizeSelector = document.getElementById("word-size-options");
+	var wordSize = wordSizeSelector.options[wordSizeSelector.selectedIndex].value;
 	return parseInt(wordSize);
 }
 
 // Reads the user-selected block size from the corresponding dropdown.
 function getBlockSize() {
-	var blockSizeSelector = document.getElementById("word-size-options").selectedIndex;
-	var blockSize = document.getElementsByTagName("option")[blockSizeSelector].value;
+	var blockSizeSelector = document.getElementById("block-size-options");
+	var blockSize = blockSizeSelector.options[blockSizeSelector.selectedIndex].value;
 	return parseInt(blockSize);
 }
 
 // Reads the user-selected number of cache lines from the corresponding dropdown.
 function getCacheLineCount() {
-	var cacheLinesSelector = document.getElementById("word-size-options").selectedIndex;
-	var cacheLines = document.getElementsByTagName("option")[cacheLinesSelector].value;
+	var cacheLinesSelector = document.getElementById("index-size-options");
+	var cacheLines = cacheLinesSelector.options[cacheLinesSelector.selectedIndex].value;
 	return parseInt(cacheLines);
 }
 
-// Set up the initial cache.
-var globalCache;
-var originalInstructionTabTitle;
-var originalInstructionTabText;
+// Updates the cache table according to the values set by the user.
+function updateCacheParameters() {
+	globalCache.setWordSize(getWordSize());
+	globalCache.setWordsPerLine(getBlockSize());
+	globalCache.setLineCount(getCacheLineCount());
+	globalCache.generateCacheLines();
+
+	// Load the global cache into the grid UI
+	var html = convertCacheToHTML(globalCache);
+	$('#cache-grid')[0].innerHTML = html;
+
+	setTableEntryColors(globalCache);
+}
 
 $('document').ready(
 	function() {

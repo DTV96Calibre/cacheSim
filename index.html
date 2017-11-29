@@ -70,8 +70,8 @@
                                         </div>
                                         <div class="col-sm-3">
                                           <select class="form-control" id="word-size-options">
-                                            <option>4 bytes</option>
-                                            <option>8 bytes</option>
+                                            <option value=4>4 bytes</option>
+                                            <option value=8>8 bytes</option>
                                         </select>
                                         </div>
                                         <div class="col-sm-4">
@@ -87,8 +87,8 @@
                                         </div>
                                         <div class="col-sm-3">
                                           <select class="form-control" id="block-size-options">
-                                            <option>4 words</option>
-                                            <option>8 words</option>
+                                            <option value=4>4 words</option>
+                                            <option value=8>8 words</option>
                                         </select>
                                         </div>
                                         <div class="col-sm-4">
@@ -104,7 +104,8 @@
                                         </div>
                                         <div class="col-sm-3">
                                           <select class="form-control" id="index-size-options">
-                                            <option>64 lines</option>
+                                            <option value=32>32 lines</option>
+                                            <option value=64>64 lines</option>
                                         </select>
                                         </div>
                                         <div class="col-sm-4">
@@ -135,7 +136,7 @@
                                 <div align="center" class="control-group">
                                     <label></label>
                                     <div class="controls">
-                                        <button type="submit" class="btn btn-primary" style="width: 60%">
+                                        <button class="btn btn-primary" id="updateButton" style="width: 60%" type="button" onclick="updateCacheParameters()">
                                             Update
                                         </button>
                                     </div>

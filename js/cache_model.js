@@ -57,7 +57,8 @@ class CacheObj {
 		this.generateCacheLines();
 	}
 
-	generateCacheLines(){
+	generateCacheLines() {
+		this.cacheLines = [];
 		for (var i = 0; i < this.cacheLineCount; i++) {
 			// Make the cache line.
 			var line = [];
@@ -73,6 +74,7 @@ class CacheObj {
 			}
 			this.cacheLines.push(line);
 		}
+		console.log(this.cacheLines.length);
 	}
 
 	// Get stats about how the cache is currently set up.
@@ -98,15 +100,12 @@ class CacheObj {
 	// Setter functions
 	setLineCount(n) {
 		this.cacheLineCount = n;
-		this.generateCacheLines();
 	}
 	setWordSize(n) {
 		this.wordSize = n;
-		this.generateCacheLines();
 	}
 	setWordsPerLine(n) {
 		this.wordsPerLine = n;
-		this.generateCacheLines();
 	}
 
 	// Get stats about how to split up the cache address.
