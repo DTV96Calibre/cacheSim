@@ -3,6 +3,11 @@
   https://github.com/DTV96Calibre/cacheSim
 */
 
+// Set up the initial cache.
+var globalCache;
+var originalInstructionTabTitle;
+var originalInstructionTabText;
+
 // These two functions are used to encode a byte into a unique ID, and back again.
 function byteToId(lineNum, wordIndex, byteOffset) {
 	var id = lineNum + "-" + wordIndex + "-" + byteOffset;
@@ -24,7 +29,6 @@ function idToByte(idStr) {
 		byteOffset: byteOffset
 	};
 }
-
 
 // Takes in a cache object, and turns it into an HTML table.
 function convertCacheToHTML(cache) {
@@ -97,33 +101,37 @@ function setTableEntryColors(cache) {
 // Reads the user-selected word size from the corresponding dropdown.
 function getWordSize() {
 	var wordSizeSelector = document.getElementById("word-size-options");
-	var optionNumber = wordSizeSelector.selectedIndex;
-	var wordSize = wordSizeSelector.getElementsByTagName("option")[optionNumber].value;
+	var wordSize = wordSizeSelector.options[wordSizeSelector.selectedIndex].value;
 	return parseInt(wordSize);
 }
 
 // Reads the user-selected block size from the corresponding dropdown.
 function getBlockSize() {
 	var blockSizeSelector = document.getElementById("block-size-options");
-	var optionNumber = blockSizeSelector.selectedIndex;
-	var blockSize = blockSizeSelector.getElementsByTagName("option")[optionNumber].value;
+	var blockSize = blockSizeSelector.options[blockSizeSelector.selectedIndex].value;
 	return parseInt(blockSize);
 }
 
 // Reads the user-selected number of cache lines from the corresponding dropdown.
 function getCacheLineCount() {
 	var cacheLinesSelector = document.getElementById("index-size-options");
-	var optionNumber = cacheLinesSelector.selectedIndex;
-	var cacheLines = cacheLinesSelector.getElementsByTagName("option")[optionNumber].value;
-	var ret = parseInt(cacheLines);
-	console.log(ret + " from " + cacheLines);
-	return ret;
+	var cacheLines = cacheLinesSelector.options[cacheLinesSelector.selectedIndex].value;
+	return parseInt(cacheLines);
 }
 
-// Set up the initial cache.
-var globalCache;
-var originalInstructionTabTitle;
-var originalInstructionTabText;
+// Updates the cache table according to the values set by the user.
+function updateCacheParameters() {
+	globalCache.setWordSize(getWordSize());
+	globalCache.setWordsPerLine(getBlockSize());
+	globalCache.setLineCount(getCacheLineCount());
+	globalCache.generateCacheLines();
+
+	// Load the global cache into the grid UI
+	var html = convertCacheToHTML(globalCache);
+	$('#cache-grid')[0].innerHTML = html;
+
+	setTableEntryColors(globalCache);
+}
 
 $('document').ready(
 	function() {
@@ -158,20 +166,14 @@ function getByteInfoHTML(idStr) {
 	var lineNum = byteId.lineNum;
 	var wordIndex = byteId.wordIndex;
 	var byteOffset = byteId.byteOffset;
-	
-	var wordObject = globalCache.getWord(lineNum, wordIndex);
-	var wordAddress = wordObject.getAddress();
-	var tag = wordObject.getTag();
+	var wordAddress = globalCache.getWord(lineNum, wordIndex).getAddress();
 
 	var lineNumDisplay = "<b>Line Number: </b>" + lineNum;
 	var wordIndexDisplay = "<b>Word Index: </b>" + wordIndex;
-	// TODO: This should use getAddressSize() to calculate the number of hex digits.
 	var wordAddressDisplay = "<b>Word Address: </b>" + intToHex(wordAddress, 8);
 	var byteOffsetDisplay = "<b>Byte Offset: </b>" + byteOffset;
-	// TODO: This should use getTagSize() to calculate the number of hex digits.
-	var tagDisplay = "<b>Tag: </b>" + intToHex(tag, 8);
 	var html = "<p>" + lineNumDisplay + "</br>" + wordIndexDisplay + "</br>" + byteOffsetDisplay + "</p>";
-	html += "<p>" + wordAddressDisplay + "</br>" + tagDisplay + "</p>";
+	html += "<p>" + wordAddressDisplay + "</p>";
 
 	return html;
 }
