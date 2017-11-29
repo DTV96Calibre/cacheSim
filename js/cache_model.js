@@ -52,10 +52,9 @@ class CacheObj {
 		this.wordsPerLine = wordsPerLine;
 		this.cacheLineCount = cacheLineCount;
 
-		var byteMaxValue = 256;
-		var addressMaxValue = Math.pow(2, 24);
+		this.byteMaxValue = 256;
+		this.addressMaxValue = Math.pow(2, 24);
 		this.generateCacheLines();
-
 	}
 
 	generateCacheLines(){
@@ -65,10 +64,10 @@ class CacheObj {
 			for (var j = 0; j < this.wordsPerLine; j++) {
 				var bytes = [];
 				for (var k = 0; k < this.wordSize; k++) {
-					var num = Srand.random() * byteMaxValue;
+					var num = Srand.random() * this.byteMaxValue;
 					bytes.push(Math.floor(num));
 				}
-				var address = Math.floor(Srand.random() * addressMaxValue);
+				var address = Math.floor(Srand.random() * this.addressMaxValue);
 				var word = new WordEntry(bytes, address);
 				line.push(word);
 			}
@@ -96,6 +95,7 @@ class CacheObj {
 		return this.getBytesPerLine();
 	}
 
+	// Setter functions
 	setLineCount(n) {
 		this.cacheLineCount = n;
 		this.generateCacheLines();
