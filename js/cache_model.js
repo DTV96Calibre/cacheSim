@@ -69,7 +69,7 @@ class CacheObj {
 					bytes.push(Math.floor(num));
 				}
 				var address = Math.floor(Srand.random() * this.addressMaxValue);
-				var word = new WordEntry(bytes, address);
+				var word = new WordEntry(bytes, address, this);
 				line.push(word);
 			}
 			this.cacheLines.push(line);
@@ -111,40 +111,40 @@ class CacheObj {
 	// Get stats about how to split up the cache address.
 	// The values these functions return are cached.
 	getByteOffsetSize_raw() {
-		var size = getWordSize();
-		var bits = Math.floor(Math.log(size));
+		var size = this.getWordSize();
+		var bits = Math.floor(Math.log(size)) + 1;
 		if ((1 << bits) != size) {
-			console.log("Error: getWordSize() didn't return a power of two: " + size);
+			console.log("Error: getWordSize() didn't return a power of two: " + size + ", bits: " + bits);
 		}
 		return bits;
 	}
-	getBlockOffsetSize() {
-		if (self._getByteOffsetSize === undefined) {
-			self._getByteOffsetSize = getByteOffsetSize_raw();
+	getByteOffsetSize() {
+		if (this._getByteOffsetSize === undefined) {
+			this._getByteOffsetSize = this.getByteOffsetSize_raw();
 		}
-		return self._getByteOffsetSize;
+		return this._getByteOffsetSize;
 	}
 	getIndexSize_raw() {
-		var size = getWordsPerLine();
-		var bits = Math.floor(Math.log(size));
+		var size = this.getWordsPerLine();
+		var bits = Math.floor(Math.log(size)) + 1;
 		if ((1 << bits) != size) {
 			console.log("Error: getWordsPerLine didn't return a power of two: " + size);
 		}
 		return bits;
 	}
 	getIndexSize() {
-		if (self._getIndexSize === undefined) {
-			self._getIndexSize = getIndexSize_raw();
+		if (this._getIndexSize === undefined) {
+			this._getIndexSize = this.getIndexSize_raw();
 		}
-		return self._getIndexSize;
-	}
-	getTagSize() {
-		var size = getAddressSize;
-		return size - getIndexSize() - getByteOffsetSize();
+		return this._getIndexSize;
 	}
 	getAddressSize() {
 		var bitsPerByte = 8;
-		return getWordSize() * bitsPerByte;
+		return this.getWordSize() * bitsPerByte;
+	}
+	getTagSize() {
+		var size = this.getAddressSize();
+		return size - this.getIndexSize() - this.getByteOffsetSize();
 	}
 
 
