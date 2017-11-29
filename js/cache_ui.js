@@ -103,14 +103,14 @@ function getWordSize() {
 
 // Reads the user-selected block size from the corresponding dropdown.
 function getBlockSize() {
-	var blockSizeSelector = document.getElementById("word-size-options").selectedIndex;
+	var blockSizeSelector = document.getElementById("block-size-options").selectedIndex;
 	var blockSize = document.getElementsByTagName("option")[blockSizeSelector].value;
 	return parseInt(blockSize);
 }
 
 // Reads the user-selected number of cache lines from the corresponding dropdown.
 function getCacheLineCount() {
-	var cacheLinesSelector = document.getElementById("word-size-options").selectedIndex;
+	var cacheLinesSelector = document.getElementById("index-size-options").selectedIndex;
 	var cacheLines = document.getElementsByTagName("option")[cacheLinesSelector].value;
 	return parseInt(cacheLines);
 }
