@@ -96,23 +96,28 @@ function setTableEntryColors(cache) {
 
 // Reads the user-selected word size from the corresponding dropdown.
 function getWordSize() {
-	var wordSizeSelector = document.getElementById("word-size-options").selectedIndex;
-	var wordSize = document.getElementsByTagName("option")[wordSizeSelector].value;
+	var wordSizeSelector = document.getElementById("word-size-options");
+	var optionNumber = wordSizeSelector.selectedIndex;
+	var wordSize = wordSizeSelector.getElementsByTagName("option")[optionNumber].value;
 	return parseInt(wordSize);
 }
 
 // Reads the user-selected block size from the corresponding dropdown.
 function getBlockSize() {
-	var blockSizeSelector = document.getElementById("block-size-options").selectedIndex;
-	var blockSize = document.getElementsByTagName("option")[blockSizeSelector].value;
+	var blockSizeSelector = document.getElementById("block-size-options");
+	var optionNumber = blockSizeSelector.selectedIndex;
+	var blockSize = blockSizeSelector.getElementsByTagName("option")[optionNumber].value;
 	return parseInt(blockSize);
 }
 
 // Reads the user-selected number of cache lines from the corresponding dropdown.
 function getCacheLineCount() {
-	var cacheLinesSelector = document.getElementById("index-size-options").selectedIndex;
-	var cacheLines = document.getElementsByTagName("option")[cacheLinesSelector].value;
-	return parseInt(cacheLines);
+	var cacheLinesSelector = document.getElementById("index-size-options");
+	var optionNumber = cacheLinesSelector.selectedIndex;
+	var cacheLines = cacheLinesSelector.getElementsByTagName("option")[optionNumber].value;
+	var ret = parseInt(cacheLines);
+	console.log(ret + " from " + cacheLines);
+	return ret;
 }
 
 // Set up the initial cache.
