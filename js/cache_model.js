@@ -42,29 +42,32 @@ class WordEntry {
 
 // Constructs a cache object.
 class CacheObj {
-	
-	constructor() {
+
+	constructor(wordSize, wordsPerLine, cacheLineCount) {
 		// Each entry in cacheLines is an array of WordEntries.
 		// WordEntry has an array of bytes and an address.
 		this.cacheLines = [];
-    
-		this.wordSize = 4;
-		this.wordsPerLine = 4;
-		this.cacheLineCount = 64;
 
-		var byteMaxValue = 256;
-		var addressMaxValue = Math.pow(2, 24);
-   		 
+		this.wordSize = wordSize;
+		this.wordsPerLine = wordsPerLine;
+		this.cacheLineCount = cacheLineCount;
+
+		this.byteMaxValue = 256;
+		this.addressMaxValue = Math.pow(2, 24);
+		this.generateCacheLines();
+	}
+
+	generateCacheLines(){
 		for (var i = 0; i < this.cacheLineCount; i++) {
 			// Make the cache line.
 			var line = [];
 			for (var j = 0; j < this.wordsPerLine; j++) {
 				var bytes = [];
 				for (var k = 0; k < this.wordSize; k++) {
-					var num = Srand.random() * byteMaxValue;
+					var num = Srand.random() * this.byteMaxValue;
 					bytes.push(Math.floor(num));
 				}
-				var address = Math.floor(Srand.random() * addressMaxValue);
+				var address = Math.floor(Srand.random() * this.addressMaxValue);
 				var word = new WordEntry(bytes, address, this);
 				line.push(word);
 			}
@@ -90,6 +93,20 @@ class CacheObj {
 	}
 	getBlockCount() {
 		return this.getBytesPerLine();
+	}
+
+	// Setter functions
+	setLineCount(n) {
+		this.cacheLineCount = n;
+		this.generateCacheLines();
+	}
+	setWordSize(n) {
+		this.wordSize = n;
+		this.generateCacheLines();
+	}
+	setWordsPerLine(n) {
+		this.wordsPerLine = n;
+		this.generateCacheLines();
 	}
 
 	// Get stats about how to split up the cache address.

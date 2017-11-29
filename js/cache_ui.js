@@ -94,16 +94,40 @@ function setTableEntryColors(cache) {
     }
 }
 
+// Reads the user-selected word size from the corresponding dropdown.
+function getWordSize() {
+	var wordSizeSelector = document.getElementById("word-size-options").selectedIndex;
+	var wordSize = document.getElementsByTagName("option")[wordSizeSelector].value;
+	return parseInt(wordSize);
+}
+
+// Reads the user-selected block size from the corresponding dropdown.
+function getBlockSize() {
+	var blockSizeSelector = document.getElementById("word-size-options").selectedIndex;
+	var blockSize = document.getElementsByTagName("option")[blockSizeSelector].value;
+	return parseInt(blockSize);
+}
+
+// Reads the user-selected number of cache lines from the corresponding dropdown.
+function getCacheLineCount() {
+	var cacheLinesSelector = document.getElementById("word-size-options").selectedIndex;
+	var cacheLines = document.getElementsByTagName("option")[cacheLinesSelector].value;
+	return parseInt(cacheLines);
+}
 
 // Set up the initial cache.
 var globalCache;
 var originalInstructionTabTitle;
 var originalInstructionTabText;
+
 $('document').ready(
 	function() {
         Srand.seed(SEED);
 
-        globalCache = new CacheObj();
+        var wordSize = getWordSize();
+        var wordsPerLine = getBlockSize(); // One block per line always, because associativity is always 1.
+        var cacheLineCount = getCacheLineCount();
+        globalCache = new CacheObj(wordSize, wordsPerLine, cacheLineCount);
         
 		// Load the global cache into the grid UI
 		var html = convertCacheToHTML(globalCache);
