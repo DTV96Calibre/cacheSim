@@ -2,7 +2,6 @@
   cache.js
   https://github.com/DTV96Calibre/cacheSim
 */
-
 // Set up the initial cache.
 var globalCache;
 var originalInstructionTabTitle;
@@ -98,6 +97,10 @@ function setTableEntryColors(cache) {
     }
 }
 
+// TODO: Make these ui-reading functions have a common naming theme.
+//       Maybe add "Option" to the end of each? Apply the same theme
+//       to the similar functions in js/memory_ui.js
+
 // Reads the user-selected word size from the corresponding dropdown.
 function getWordSize() {
 	var wordSizeSelector = document.getElementById("word-size-options");
@@ -105,6 +108,7 @@ function getWordSize() {
 	return parseInt(wordSize);
 }
 
+// TODO: Move this to js/memory_ui.js
 // Reads the user-selected block size from the corresponding dropdown.
 function getBlockSize() {
 	var blockSizeSelector = document.getElementById("block-size-options");
@@ -119,12 +123,17 @@ function getCacheLineCount() {
 	return parseInt(cacheLines);
 }
 
+// TODO: Move this to js/memory_ui.js
 // Updates the cache table according to the values set by the user.
 function updateCacheParameters() {
-	globalCache.setWordSize(getWordSize());
-	globalCache.setWordsPerLine(getBlockSize());
-	globalCache.setLineCount(getCacheLineCount());
-	globalCache.generateCacheLines();
+	globalMemory.setWordSize(getWordSize());
+	globalMemory.setWordCount(getMemorySize());
+	globalMemory.generateCacheLines();
+
+	//globalCache.setWordsPerLine(getBlockSize());
+	//globalCache.setLineCount(getCacheLineCount());
+	var blockSize = getBlockSize();
+	var lineCount = getCacheLineCount();
 
 	// Load the global cache into the grid UI
 	var html = convertCacheToHTML(globalCache);
@@ -133,6 +142,7 @@ function updateCacheParameters() {
 	setTableEntryColors(globalCache);
 }
 
+// TODO: Move to js/memory_ui.js
 $('document').ready(
 	function() {
         Srand.seed(SEED);
@@ -140,7 +150,9 @@ $('document').ready(
         var wordSize = getWordSize();
         var wordsPerLine = getBlockSize(); // One block per line always, because associativity is always 1.
         var cacheLineCount = getCacheLineCount();
-        globalCache = new CacheObj(wordSize, wordsPerLine, cacheLineCount);
+		// TODO: Fix this.
+		globalMemory = new MemoryObj(wordSize, 1000);
+        globalCache = new CacheObj(wordsPerLine, cacheLineCount, globalMemory);
         
 		// Load the global cache into the grid UI
 		var html = convertCacheToHTML(globalCache);
@@ -166,7 +178,12 @@ function getByteInfoHTML(idStr) {
 	var lineNum = byteId.lineNum;
 	var wordIndex = byteId.wordIndex;
 	var byteOffset = byteId.byteOffset;
-	var wordAddress = globalCache.getWord(lineNum, wordIndex).getAddress();
+	var wordObj = globalCache.getWord(lineNum, wordIndex);
+	if (wordObj.getState() == MsiState.Invalid) {
+		return "<p>This word is not tracking any words in main memory.</p>";
+	}
+
+	var wordAddress = wordObj.getAddress();
 
 	var lineNumDisplay = "<b>Line Number: </b>" + lineNum;
 	var wordIndexDisplay = "<b>Word Index: </b>" + wordIndex;
