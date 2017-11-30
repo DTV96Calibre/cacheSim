@@ -90,10 +90,10 @@ function writeWordToMem(){
 		word[id] = hexToNum(wordGroup[i].innerHTML);
 	}
 	var address = hexToNum($("#addressField")[0].innerHTML);
-	globalMemory.writeWord(address, word, null);
+	globalMemory.writeWord(address, word, null, "USER");
 }
 
 function readWordFromMem(){
 	var address = hexToNum($("#addressField")[0].innerHTML);
-	return globalMemory.readWord(address, null);
+	return globalMemory.readWord(address, null, "USER");
 }
