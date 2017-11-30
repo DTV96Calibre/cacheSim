@@ -2,7 +2,6 @@
   cache.js
   https://github.com/DTV96Calibre/cacheSim
 */
-
 // Set up the initial cache.
 var globalCacheCPU1;
 var globalCacheCPU2;
@@ -36,6 +35,9 @@ function idToByte(idStr) {
  * @param cpu: An int (1 or 2) describing the CPU this cache belongs to.
  */
 function convertCacheToHTML(cache, cpu) {
+
+	console.log(cache);
+	console.trace();
 
 	// First, make the column headers. They're named for each word in the table.
 	// These headers span 4 columns.
@@ -115,6 +117,10 @@ function setTableEntryColors(cache, cpu) {
     }
 }
 
+// TODO: Make these ui-reading functions have a common naming theme.
+//       Maybe add "Option" to the end of each? Apply the same theme
+//       to the similar functions in js/memory_ui.js
+
 // Reads the user-selected word size from the corresponding dropdown.
 function getWordSize() {
 	var wordSizeSelector = document.getElementById("word-size-options");
@@ -122,6 +128,7 @@ function getWordSize() {
 	return parseInt(wordSize);
 }
 
+// TODO: Move this to js/memory_ui.js
 // Reads the user-selected block size from the corresponding dropdown.
 function getBlockSize() {
 	var blockSizeSelector = document.getElementById("block-size-options");
@@ -136,22 +143,28 @@ function getCacheLineCount() {
 	return parseInt(cacheLines);
 }
 
+// TODO: Move this to js/memory_ui.js
 /* Updates the cache table according to the values set by the user.
  * @param cache: The CacheObj to update.
  * @param cpu: An int (1 or 2) describing the CPU this cache belongs to.
  */
-function updateCacheParameters(cache, cpu) {
-	cache.setWordSize(getWordSize());
-	cache.setWordsPerLine(getBlockSize());
-	cache.setLineCount(getCacheLineCount());
-	cache.generateCacheLines();
+function updateCacheParameters() {
+	globalMemory.setWordSize(getWordSize());
+	globalMemory.setWordCount(getMemorySize());
+	globalMemory.generateWords();
 
-	// Load the global cache into the grid UI
-	var html = convertCacheToHTML(cache, cpu);
-	var cpuDescriptor = (cpu == 2) ? '2' : '';
-	$('#cache-grid' + cpuDescriptor)[0].innerHTML = html;
+	var blockSize = getBlockSize();
+	var lineCount = getCacheLineCount();
+	globalCacheCPU1 = globalMemory.generateCache(blockSize, lineCount, globalMemory);
+	globalCacheCPU2 = globalMemory.generateCache(blockSize, lineCount, globalMemory);
 
-	setTableEntryColors(cache, cpu);
+	var html1 = convertCacheToHTML(globalCacheCPU1, 1);
+	var html2 = convertCacheToHTML(globalCacheCPU2, 2);
+	$('#cache-grid')[0].innerHTML = html1;
+	$('#cache-grid2')[0].innerHTML = html2;
+
+	setTableEntryColors(globalCacheCPU1, 1);
+	setTableEntryColors(globalCacheCPU2, 2);
 }
 
 /*
@@ -181,6 +194,7 @@ function updateBitDisplay() {
     $('#tag').html(tagBits);
 }
 
+// TODO: Move to js/memory_ui.js
 $('document').ready(
 	function() {
         Srand.seed(SEED);
@@ -188,8 +202,19 @@ $('document').ready(
         var wordSize = getWordSize();
         var wordsPerLine = getBlockSize(); // One block per line always, because associativity is always 1.
         var cacheLineCount = getCacheLineCount();
-        globalCacheCPU1 = new CacheObj(wordSize, wordsPerLine, cacheLineCount);
-        globalCacheCPU2 = new CacheObj(wordSize, wordsPerLine, cacheLineCount);
+        console.log('wordsPerLine: ' + wordsPerLine);
+        console.log('cacheLineCount: ' + cacheLineCount);
+		
+		// TODO: Fix this.
+		globalMemory = new MemoryObj(wordSize, 1000);
+        globalCacheCPU1 = globalMemory.generateCache(wordsPerLine, cacheLineCount, globalMemory);
+		globalCacheCPU2 = globalMemory.generateCache(wordsPerLine, cacheLineCount, globalMemory);
+        
+		// Load the global cache into the grid UI
+		var html1 = convertCacheToHTML(globalCacheCPU1);
+		var html2 = convertCacheToHTML(globalCacheCPU2);
+		$('#cache-grid')[0].innerHTML = html1;
+		$('#cache-grid2')[0].innerHTML = html2;
 
 		updateCaches();
 
@@ -210,7 +235,14 @@ function getByteInfoHTML(idStr) {
 	var lineNum = byteId.lineNum;
 	var wordIndex = byteId.wordIndex;
 	var byteOffset = byteId.byteOffset;
-	var wordAddress = globalCacheCPU1.getWord(lineNum, wordIndex).getAddress();
+	// TODO: Figure out which CPU we're working with.
+	var wordObj = globalCacheCPU1.getWord(lineNum, wordIndex);
+	if (wordObj.getState() == MsiState.Invalid) {
+		return "<p>This word is not tracking any words in main memory.</p>";
+	}
+
+	var wordAddress = wordObj.getAddress();
+	//var wordAddress = globalCacheCPU1.getWord(lineNum, wordIndex).getAddress();
 
 	var lineNumDisplay = "<b>Line Number: </b>" + lineNum;
 	var wordIndexDisplay = "<b>Word Index: </b>" + wordIndex;
