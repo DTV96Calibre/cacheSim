@@ -290,7 +290,16 @@ class CacheObj {
 
 	// Looks for a matching word, and returns it. If the word isn't in the cache, return null.
 	findWord(address) {
-		// TODO: Turn an address into index and block offset, check the tag, etc.
+		var word = null;
+		var byteoff = this.getByteOffsetSize();
+		var blockoff = this.getBlockCount();
+		var indexoff = this.getIndexSize();
+		var lineNum = parseInt((address.toString(2)).substring(this.getAddressSize-byteoff-blockoff-indexoff-1,this.getAddressSize-byteoff-blockoff-1),2);
+		console.log("Trying to find the word at: " + lineNum);
+		var wordIndex = parseInt((address.toString(2)).substring(this.getAddressSize-byteoff-blockoff-1,this.getAddressSize-byteoff-1),2);
+		console.log("Trying to find the word at: " + wordIndex);
+		word = this.getWord(lineNum,wordIndex);
+		return null;
 	}
 
 	// These are the hooks for read/write broadcasts. THESE FUNCTIONS CANNOT CALL setWord() OR readWord()!
