@@ -164,49 +164,53 @@
             </div>
             <!--/row-->
 
-            <!--tabs-->
-            <div class="panel">
-                <ul class="nav nav-tabs" id="myTab">
-                    <li class="active"><a href="#cpu1" data-toggle="tab">CPU 1 Cache</a></li>
-                    <li><a href="#cpu2" data-toggle="tab">CPU 2 Cache</a></li>
-					<li><a href="#memory" data-toggle="tab">Main Memory</a></li>
-                </ul>
-                <div class="tab-content">
-                    <!-- CPU 1 Cache Table -->
-                    <div class="tab-pane active well" id="cpu1" style="background-color: white !important; height:400px">
-                        <div class="table-responsive table-scrollable" style="height:100%">
-                            <!-- Table start -->
-                            <table class="table table-striped" id="cache-grid">
-                                <thead>
-                                    <tr>
-                                        <th>this is a table</th>
-                                        <th>unicorns</th>
-                                        <th>north korea</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <!-- Table end -->
-                        </div>
-                    </div>
+            	<div class="row">
 
-                    <!-- CPU 2 Cache Table -->
-                    <div class="tab-pane well" id="cpu2" style="background-color: white !important; height:400px">
-                        <div class="table-responsive table-scrollable" style="height:100%">
-                            <!-- Table start -->
-                            <table class="table table-striped" id="cache-grid2">
-                                <thead>
-                                    <tr>
-                                        <th>this is a table</th>
-                                        <th>unicorns</th>
-                                        <th>north korea</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <!-- Table end -->
-                        </div>
-                    </div>
+            		<div class="col-md-8">
+			            <!--tabs-->
+			            <div class="panel">
 
-					<!-- Main Memory Table -->
+			                <ul class="nav nav-tabs" id="myTab" style="background-color: #F5F5F5 !important;">
+			                    <li class="active"><a href="#cpu1" data-toggle="tab">CPU 1 Cache</a></li>
+			                    <li><a href="#cpu2" data-toggle="tab">CPU 2 Cache</a></li>
+													<li><a href="#memory" data-toggle="tab">Main Memory</a></li>
+			                </ul>
+			                <div class="tab-content">
+			                    <!-- CPU 1 Cache Table -->
+			                    <div class="tab-pane active well" id="cpu1" style="background-color: white !important; height:400px">
+			                        <div class="table-responsive table-scrollable" style="height:100%">
+			                            <!-- Table start -->
+			                            <table class="table table-striped" id="cache-grid">
+			                                <thead>
+			                                    <tr>
+			                                        <th>this is a table</th>
+			                                        <th>unicorns</th>
+			                                        <th>north korea</th>
+			                                    </tr>
+			                                </thead>
+			                            </table>
+			                            <!-- Table end -->
+			                        </div>
+			                    </div>
+
+			                    <!-- CPU 2 Cache Table -->
+			                    <div class="tab-pane well" id="cpu2" style="background-color: white !important; height:400px">
+			                        <div class="table-responsive table-scrollable" style="height:100%">
+			                            <!-- Table start -->
+			                            <table class="table table-striped" id="cache-grid2">
+			                                <thead>
+			                                    <tr>
+			                                        <th>this is a table</th>
+			                                        <th>unicorns</th>
+			                                        <th>north korea</th>
+			                                    </tr>
+			                                </thead>
+			                            </table>
+			                            <!-- Table end -->
+			                        </div>
+			                    </div>
+
+										<!-- Main Memory Table -->
                     <div class="tab-pane well" id="memory" style="background-color: white !important; height:400px">
                         <div class="table-responsive table-scrollable" style="height:100%">
                             <!-- Table start -->
@@ -226,43 +230,46 @@
             </div>
             <!--/tabs-->
 
-        </div>
-        <!--/col-span-9-->
+	        		</div> <!--/col-span-->
+
+	        <div class="col-md-4">
+			      <div class="panel panel-default">
+			        <div class="panel-heading">
+			          <h4>Memory Control</h4></div>
+			          <div class="panel-body" >
+			            <div class="row">
+			              <div class="form-group"> <!-- nested form-group acting like row -->
+			                <div class="col-sm-5">
+			                  <input type="text" class="form-control" placeholder="Address">
+			                </div><!-- /col-sm-6 -->
+			                <div class="col-sm-5" style="left:-5px">
+			                  <form class="form-group" method="post" action="">
+			                    <input name="word" class="form-control" placeholder="Byte Offset: 0">
+			                    <input name="word" class="form-control" placeholder="Byte Offset: 1">
+			                    <input name="word" class="form-control" placeholder="Byte Offset: 2">
+			                    <input name="word" class="form-control" placeholder="Byte Offset: 3"> </form>
+			                  </div><!-- /col-sm-4 -->
+			                  <div class="col-sm-2" style="left:-20px">
+			                    <form class="form-inline" method="post" action="" >
+			                      <button type="submit" class="btn btn-primary">Write</button>
+			                      <button type="submit" class="btn btn-primary">Read</button>
+			                    </form>
+			                  </div>
+			                </div>
+
+			              </div>
+			              <!--/panel-body-->
+			            </div>
+			            <!--/panel-->
+	          </div>
+	        </div>
+
+	      </div> <!-- /row -->
+	    </div> <!-- /col-md-10 -->
     </div>
 
     <div class="col-md-1"></div>
 
-    <div class="col-md-5">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4>Memory Control</h4></div>
-          <div class="panel-body" >
-            <div class="row">
-              <div class="form-group"> <!-- nested form-group acting like row -->
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" placeholder="Address">
-                </div><!-- /col-sm-6 -->
-                <div class="col-sm-4">
-                  <form class="form-inline" method="post" action="">
-                    <input name="word" class="form-control" placeholder="Byte Offset:0">
-                    <input name="word" class="form-control" placeholder="Byte Offset:1">
-                    <input name="word" class="form-control" placeholder="Byte Offset:2">
-                    <input name="word" class="form-control" placeholder="Byte Offset:3"> </form>
-                  </div><!-- /col-sm-4 -->
-                  <div class="col-sm-4">
-                    <form class="form-inline" method="post" action="">
-                      <button type="submit" class="btn btn-primary">Write</button>
-                      <button type="submit" class="btn btn-primary">Read</button>
-                    </form>
-                  </div>
-                </div>
-
-              </div>
-              <!--/panel-body-->
-            </div>
-            <!--/panel-->
-          </div>
-        </div>
     <div class="col-md-5">
     </div>
     <!-- /col-span-5-->
