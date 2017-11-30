@@ -9,7 +9,7 @@ class MemoryWordEntry {
 		this.address = address;
 		this.parentMem = parentMem;
 	}
-	
+
 
 	getBytes() {
 		return this.bytes;
@@ -35,7 +35,7 @@ class MemoryWordEntry {
 // This class controls main memory, and provides methods for caches to interact
 // with each other.
 class MemoryObj {
-	
+
 	// memSize is the number of words in main memory.
 	constructor(wordSize, memSize) {
 		this.wordSize = wordSize;
@@ -82,7 +82,7 @@ class MemoryObj {
 			console.log("Error: Attempt to access unaligned address " + address
 				+ " with: {baseAddress = " + this.getBaseAddress() + ", wordSize = " + this.getWordSize() + "}");
 		}
-		
+
 		var wordAddress = realAddress / this.getWordSize();
 		return this.memory[wordAddress];
 	}
@@ -106,7 +106,7 @@ class MemoryObj {
 
 	// When the user is setting the word, set the sourceCache to null.
 	// Bytes is an array of four bytes.
-	setWord(address, bytes, sourceCache) {
+	writeWord(address, bytes, sourceCache) {
 		// First, broadcast that the value has changed.
 		for (var i = 0; i != this.getCaches().length; i++) {
 			var cache = this.getCaches()[i];
@@ -130,7 +130,7 @@ class MemoryObj {
 			if (cache == sourceCache) {
 				continue;
 			}
-			
+
 			// byteRead returns an array of bytes if it needs to do writeback,
 			// or null otherwise.
 			var bytes = cache.wordRead(address);
@@ -159,7 +159,3 @@ class MemoryObj {
 		return undefined;
 	}
 }
-
-
-
-
