@@ -44,3 +44,7 @@ footer {
 .grid-byte-selected {
 	background-color: #FFF63B !important;
 }
+
+.text-log {
+  font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+}

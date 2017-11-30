@@ -181,30 +181,6 @@ function updateBitDisplay() {
     $('#tag').html(tagBits);
 }
 
-// TODO: Move to js/memory_ui.js
-$('document').ready(
-	function() {
-        Srand.seed(SEED);
-
-        var wordSize = getWordSize();
-        var wordsPerLine = getBlockSize(); // One block per line always, because associativity is always 1.
-        var cacheLineCount = getCacheLineCount();
-		
-		globalMemory = new MemoryObj(wordSize, 1000);
-        
-		updateCaches();
-
-		// Save the contents of the instructions tab in a variable. The contents
-		// the instruction tab are overwritten whenever the user mouses over an
-		// entry in the cache; but are restored when the user isn't mousing over anything.
-		originalInstructionTabTitle = $('#instructions-title')[0].innerHTML;
-		originalInstructionTabText = $('#instructions-body')[0].innerHTML;
-
-		// Enable all tooltips in the cache table.
-		//$("td").tooltip();
-		$("[data-toggle='tooltip']").tooltip();
-	});
-
 function getByteInfoHTML(idStr) {
 
 	byteId = idToByte(idStr);
@@ -257,3 +233,36 @@ function gridMouseClick(source) {
 		replaceInstructions(getByteInfoHTML(source.id));
 	}
 }
+
+// Writes a broadcast event to the log of text beneath the cache.
+function displayBroadcastEvent(eventText) {
+	var log = $('#log');
+	log.append('<br>' + eventText);
+}
+
+// TODO: Move to js/memory_ui.js
+$('document').ready(
+	function() {
+        Srand.seed(SEED);
+
+        var wordSize = getWordSize();
+        var wordsPerLine = getBlockSize(); // One block per line always, because associativity is always 1.
+        var cacheLineCount = getCacheLineCount();
+		
+		globalMemory = new MemoryObj(wordSize, 1000);
+        
+		updateCaches();
+
+		// Save the contents of the instructions tab in a variable. The contents
+		// the instruction tab are overwritten whenever the user mouses over an
+		// entry in the cache; but are restored when the user isn't mousing over anything.
+		originalInstructionTabTitle = $('#instructions-title')[0].innerHTML;
+		originalInstructionTabText = $('#instructions-body')[0].innerHTML;
+
+		// Enable all tooltips in the cache table.
+		//$("td").tooltip();
+		$("[data-toggle='tooltip']").tooltip();
+
+		displayBroadcastEvent('sample event 1');
+		displayBroadcastEvent('sample event 2');
+	});
