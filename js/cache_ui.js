@@ -36,9 +36,6 @@ function idToByte(idStr) {
  */
 function convertCacheToHTML(cache, cpu) {
 
-	console.log(cache);
-	console.trace();
-
 	// First, make the column headers. They're named for each word in the table.
 	// These headers span 4 columns.
 	var wordHeader = "<tr><th></th>";
@@ -202,8 +199,6 @@ $('document').ready(
         var wordSize = getWordSize();
         var wordsPerLine = getBlockSize(); // One block per line always, because associativity is always 1.
         var cacheLineCount = getCacheLineCount();
-        console.log('wordsPerLine: ' + wordsPerLine);
-        console.log('cacheLineCount: ' + cacheLineCount);
 		
 		// TODO: Fix this.
 		globalMemory = new MemoryObj(wordSize, 1000);
