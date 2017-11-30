@@ -22,6 +22,8 @@
         <script src="js/util.js"></script>
 		<script src="js/cache_model.js"></script>
 		<script src="js/cache_ui.js"></script>
+		<script src="js/memory_model.js"></script>
+		<script src="js/memory_ui.js"></script>
         <script src="js/scripts.js"></script>
 	</head>
 	<body>
@@ -77,7 +79,7 @@
                                         <div class="col-sm-4">
                                           <label>Byte Offset Bits:</label>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-2" id="byteb">
                                           2
                                         </div>
                                         <br><br>
@@ -94,7 +96,7 @@
                                         <div class="col-sm-4">
                                           <label>Block Offset Bits:</label>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-2" id="blockb">
                                           2
                                         </div>
                                         <br><br>
@@ -111,7 +113,7 @@
                                         <div class="col-sm-4">
                                           <label>Index Bits:</label>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-2" id="index">
                                           6
                                         </div>
                                         <br><br>
@@ -127,7 +129,7 @@
                                         <div class="col-sm-4">
                                           <label>Tag Bits:</label>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-2" id="tag">
                                           22
                                         </div>
                                     </div> <!-- /dropdowns -->
@@ -165,8 +167,9 @@
             <!--tabs-->
             <div class="panel">
                 <ul class="nav nav-tabs" id="myTab">
-                    <li class="active"><a href="#cpu1" data-toggle="tab">CPU 1</a></li>
-                    <li><a href="#cpu2" data-toggle="tab">CPU 2</a></li>
+                    <li class="active"><a href="#cpu1" data-toggle="tab">CPU 1 Cache</a></li>
+                    <li><a href="#cpu2" data-toggle="tab">CPU 2 Cache</a></li>
+					<li><a href="#memory" data-toggle="tab">Main Memory</a></li>
                 </ul>
                 <div class="tab-content">
                     <!-- CPU 1 Cache Table -->
@@ -191,6 +194,23 @@
                         <div class="table-responsive table-scrollable" style="height:100%">
                             <!-- Table start -->
                             <table class="table table-striped" id="cache-grid2">
+                                <thead>
+                                    <tr>
+                                        <th>this is a table</th>
+                                        <th>unicorns</th>
+                                        <th>north korea</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <!-- Table end -->
+                        </div>
+                    </div>
+
+					<!-- Main Memory Table -->
+                    <div class="tab-pane well" id="cpu2" style="background-color: white !important; height:400px">
+                        <div class="table-responsive table-scrollable" style="height:100%">
+                            <!-- Table start -->
+                            <table class="table table-striped" id="main-memory-grid">
                                 <thead>
                                     <tr>
                                         <th>this is a table</th>

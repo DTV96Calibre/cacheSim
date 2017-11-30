@@ -2,7 +2,6 @@
   cache.js
   https://github.com/DTV96Calibre/cacheSim
 */
-
 // Set up the initial cache.
 var globalCacheCPU1;
 var globalCacheCPU2;
@@ -40,9 +39,11 @@ function convertCacheToHTML(cache, cpu) {
 	// First, make the column headers. They're named for each word in the table.
 	// These headers span 4 columns.
 	var wordHeader = "<tr><th></th>";
-	for (var i = 0; i < cache.getWordsPerLine(); i++) {
-		var entry = "<th colspan='4'> Word " + i + " </th>";
-		wordHeader += entry;
+	for (var j = 0; j < cache.getWordSize() / 4; j++) {
+		for (var i = 0; i < cache.getWordsPerLine(); i++) {
+			var entry = "<th colspan='4'> Word " + i + " </th>";
+			wordHeader += entry;
+		}
 	}
 
 	// Next, make each byte colum header. They're named for their byte index.
@@ -100,7 +101,7 @@ function setTableEntryColors(cache, cpu) {
     // Record the cache parameters before beginning iteration
     var numLines = cache.cacheLineCount;
     var numWords = cache.wordsPerLine;
-    var numBytes = cache.wordSize;
+    var numBytes = cache.getWordSize();
 
     // Set the font color of each interior cell of the table
     for (var line = 0; line < numLines; line++) {
@@ -113,6 +114,10 @@ function setTableEntryColors(cache, cpu) {
     }
 }
 
+// TODO: Make these ui-reading functions have a common naming theme.
+//       Maybe add "Option" to the end of each? Apply the same theme
+//       to the similar functions in js/memory_ui.js
+
 // Reads the user-selected word size from the corresponding dropdown.
 function getWordSize() {
 	var wordSizeSelector = document.getElementById("word-size-options");
@@ -120,6 +125,7 @@ function getWordSize() {
 	return parseInt(wordSize);
 }
 
+// TODO: Move this to js/memory_ui.js
 // Reads the user-selected block size from the corresponding dropdown.
 function getBlockSize() {
 	var blockSizeSelector = document.getElementById("block-size-options");
@@ -134,38 +140,48 @@ function getCacheLineCount() {
 	return parseInt(cacheLines);
 }
 
-/* Updates the cache table according to the values set by the user.
- * @param cache: The CacheObj to update.
- * @param cpu: An int (1 or 2) describing the CPU this cache belongs to.
- */
-function updateCacheParameters(cache, cpu) {
-	cache.setWordSize(getWordSize());
-	cache.setWordsPerLine(getBlockSize());
-	cache.setLineCount(getCacheLineCount());
-	cache.generateCacheLines();
-
-	// Load the global cache into the grid UI
-	var html = convertCacheToHTML(cache, cpu);
-	var cpuDescriptor = (cpu == 2) ? '2' : '';
-	$('#cache-grid' + cpuDescriptor)[0].innerHTML = html;
-
-	setTableEntryColors(cache, cpu);
-}
-
+// TODO: Rename.
 /*
  * Updates all caches.
  */
 function updateCaches() {
-	updateCacheParameters(globalCacheCPU1, 1);
-	updateCacheParameters(globalCacheCPU2, 2);
+	globalMemory.setWordSize(getWordSize());
+	globalMemory.setWordCount(getMemorySize());
+	globalMemory.generateWords();
 
-	// Force initial cache contents to be identical
-    globalCacheCPU2.cacheLines = globalCacheCPU1.cacheLines;
-    var html = convertCacheToHTML(globalCacheCPU2, 2);
-	$('#cache-grid2')[0].innerHTML = html;
+	var blockSize = getBlockSize();
+	var lineCount = getCacheLineCount();
+	globalCacheCPU1 = globalMemory.generateCache(blockSize, lineCount, globalMemory);
+	globalCacheCPU2 = globalMemory.generateCache(blockSize, lineCount, globalMemory);
+
+	// Purely asthetic.
+	var globalMemoryWidth = 4;
+
+	var html1 = convertCacheToHTML(globalCacheCPU1, 1);
+	var html2 = convertCacheToHTML(globalCacheCPU2, 2);
+	//var htmlMem = convertMemoryToHTML(globalMemory, globalMemoryWidth);
+	$('#cache-grid')[0].innerHTML = html1;
+	$('#cache-grid2')[0].innerHTML = html2;
+	//$('#main-memory-grid')[0].innerHTML = htmlMem;
+
+	setTableEntryColors(globalCacheCPU1, 1);
 	setTableEntryColors(globalCacheCPU2, 2);
+    updateBitDisplay();
 }
 
+function updateBitDisplay() {
+	var byteOffsetBits = Math.log2(getWordSize());
+	var blockOffsetBits = Math.log2(getBlockSize());
+	var indexBits = Math.log2(getCacheLineCount());
+	var tagBits = getWordSize() * 8 - byteOffsetBits - blockOffsetBits - indexBits;
+
+    $('#byteb').html(byteOffsetBits);
+    $('#blockb').html(blockOffsetBits);
+    $('#index').html(indexBits);
+    $('#tag').html(tagBits);
+}
+
+// TODO: Move to js/memory_ui.js
 $('document').ready(
 	function() {
         Srand.seed(SEED);
@@ -173,9 +189,9 @@ $('document').ready(
         var wordSize = getWordSize();
         var wordsPerLine = getBlockSize(); // One block per line always, because associativity is always 1.
         var cacheLineCount = getCacheLineCount();
-        globalCacheCPU1 = new CacheObj(wordSize, wordsPerLine, cacheLineCount);
-        globalCacheCPU2 = new CacheObj(wordSize, wordsPerLine, cacheLineCount);
-
+		
+		globalMemory = new MemoryObj(wordSize, 1000);
+        
 		updateCaches();
 
 		// Save the contents of the instructions tab in a variable. The contents
@@ -195,7 +211,14 @@ function getByteInfoHTML(idStr) {
 	var lineNum = byteId.lineNum;
 	var wordIndex = byteId.wordIndex;
 	var byteOffset = byteId.byteOffset;
-	var wordAddress = globalCacheCPU1.getWord(lineNum, wordIndex).getAddress();
+	// TODO: Figure out which CPU we're working with.
+	var wordObj = globalCacheCPU1.getWord(lineNum, wordIndex);
+	if (wordObj.getState() == MsiState.Invalid) {
+		return "<p>This word is not tracking any words in main memory.</p>";
+	}
+
+	var wordAddress = wordObj.getAddress();
+	//var wordAddress = globalCacheCPU1.getWord(lineNum, wordIndex).getAddress();
 
 	var lineNumDisplay = "<b>Line Number: </b>" + lineNum;
 	var wordIndexDisplay = "<b>Word Index: </b>" + wordIndex;

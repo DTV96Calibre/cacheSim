@@ -9,31 +9,41 @@ var MsiState = {
 	Invalid: 3
 }
 
-class WordEntry {
+class CacheWordEntry {
 
 	// address is the 32bit pointer to where it originally
 	// came from in memory.
 	// Note: Words initialize as Invalid.
-	constructor(bytes, address, parentCache) {
-		this.bytes = bytes;
-		this.address = address;
+	constructor(parentCache) {
+		this.address = 0;
 		this.parentCache = parentCache;
+		this.word = null;
+		this.hasAddress = false;
 
 		// MSI state is kept on a per-word basis.
-		// TODO: Initialize as Invalid instead of Shared.
-		// This has to wait until the cache and main memory
-		// are separated.
-		this.state = MsiState.Shared;
+		this.state = MsiState.Invalid;
 	}
 
+	getWord() {
+		if (this.state == MsiState.Invalid) {
+			this.setShared();
+		} 
+		return this.word;
+	}
 	getBytes() {
-		return this.bytes;
+		if (this.state == MsiState.Invalid) {
+			this.getWord();
+		}
+		return this.word.getBytes();
 	}
 	getByte(byteOffset) {
-		return this.bytes[byteOffset];
+		if (this.state == MsiState.Invalid) {
+			this.getWord();
+		}
+		return this.word.bytes[byteOffset];
 	}
 	getSize() {
-		return this.bytes.length();
+		return this.parentCache.getWordSize();
 	}
 	getAddress() {
 		return this.address;
@@ -55,6 +65,9 @@ class WordEntry {
 	getState() {
 		return this.state;
 	}
+	getHasAddress() {
+		return this.hasAddress;
+	}
 
 	// These are methods to control the MSI state, assuming this
 	// word is still pointing at the same address. If assigning
@@ -63,7 +76,15 @@ class WordEntry {
 		this.state = MsiState.Invalid;
 	}
 	setShared() {
-		this.state = MsiState.Shared;
+		if (this.hasAddress) {
+			// Read the word.
+			var mem = this.parentCache.getMemory();
+			this.state = MsiState.Shared;
+			mem.bcastRead(address, this);
+			this.word = this.parentCache.getMemory().getWord(this.address);
+		} else {
+			console.log("Error: Attempt to get word with no address");
+		}
 	}
 	setModified(newBytes) {
 		if (this.state == MsiState.Invalid) {
@@ -73,18 +94,13 @@ class WordEntry {
 		this.bytes = newBytes;
 	}
 
-	// This method changes the address and corresponding data that
-	// the word object is tracking. isModified should be set to true
-	// if this word fetched from main memory due to a Write; it should
-	// be false if it was due to a Read.
-	changeWord(bytes, address, isModified) {
-		this.bytes = bytes;
+	setAddress(address) {
 		this.address = address;
-		if (isModified) {
-			this.state = MsiState.Modified;
-		} else {
-			this.state = MsiState.Shared;
-		}
+		this.hasAddress = true;
+	}
+	clearAddress() {
+		this.address = 0;
+		this.hasAddress = false;
 	}
 
 }
@@ -92,12 +108,16 @@ class WordEntry {
 // Constructs a cache object.
 class CacheObj {
 
-	constructor(wordSize, wordsPerLine, cacheLineCount) {
+	constructor(wordsPerLine, cacheLineCount, parentMemory) {
 		// Each entry in cacheLines is an array of WordEntries.
 		// WordEntry has an array of bytes and an address.
 		this.cacheLines = [];
-
-		this.wordSize = wordSize;
+		
+		if (parentMemory === undefined) {
+			throw "Error: parentMemory parameter not given!";
+		}
+		this.parentMemory = parentMemory;
+		
 		this.wordsPerLine = wordsPerLine;
 		this.cacheLineCount = cacheLineCount;
 
@@ -112,26 +132,23 @@ class CacheObj {
 			// Make the cache line.
 			var line = [];
 			for (var j = 0; j < this.wordsPerLine; j++) {
-				var bytes = [];
-				for (var k = 0; k < this.wordSize; k++) {
-					var num = Srand.random() * this.byteMaxValue;
-					bytes.push(Math.floor(num));
-				}
-				var address = Math.floor(Srand.random() * this.addressMaxValue);
-				var word = new WordEntry(bytes, address, this);
+				var word = new CacheWordEntry(this);
 				line.push(word);
 			}
 			this.cacheLines.push(line);
 		}
-		console.log(this.cacheLines.length);
 	}
 
 	// Get stats about how the cache is currently set up.
 	getLineCount() {
 		return this.cacheLines.length;
 	}
+	getMemory() {
+		return this.parentMemory;
+	}
 	getWordSize() {
-		return this.wordSize;
+		var mem = this.getMemory();
+		return mem.getWordSize();
 	}
 	getWordsPerLine() {
 		return this.wordsPerLine;
@@ -218,7 +235,11 @@ class CacheObj {
 		for (var i = 0; i < line.length(); i++) {
 			var word = line[i];
 			for (var j = 0; j < word.getSize(); j++) {
-				bytes.push(word.getByte(j));
+				if (word.getHasAddress()) {
+					bytes.push(word.getByte(j));
+				} else {
+					bytes.push(0);
+				}
 			}
 		}
 
@@ -244,7 +265,11 @@ class CacheObj {
 			return null;
 		}
 		var word = this.getWord(lineNum, wordIndex);
-		return word.getByte(byteOffset);
+		if (word.getHasAddress()) {
+			return word.getByte(byteOffset);
+		} else {
+			return 0;
+		}
 	}
 
 	// Get a particular byte in a line, indexed by byte.
