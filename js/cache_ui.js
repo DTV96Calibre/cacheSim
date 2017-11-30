@@ -39,9 +39,11 @@ function convertCacheToHTML(cache, cpu) {
 	// First, make the column headers. They're named for each word in the table.
 	// These headers span 4 columns.
 	var wordHeader = "<tr><th></th>";
-	for (var i = 0; i < cache.getWordsPerLine(); i++) {
-		var entry = "<th colspan='4'> Word " + i + " </th>";
-		wordHeader += entry;
+	for (var j = 0; j < cache.getWordSize() / 4; j++) {
+		for (var i = 0; i < cache.getWordsPerLine(); i++) {
+			var entry = "<th colspan='4'> Word " + i + " </th>";
+			wordHeader += entry;
+		}
 	}
 
 	// Next, make each byte colum header. They're named for their byte index.
@@ -175,6 +177,7 @@ function updateCaches() {
     var html = convertCacheToHTML(globalCacheCPU2, 2);
 	$('#cache-grid2')[0].innerHTML = html;
 	setTableEntryColors(globalCacheCPU2, 2);
+    updateBitDisplay();
 }
 
 // TODO: Move to js/memory_ui.js
@@ -261,4 +264,11 @@ function gridMouseClick(source) {
 		source.classList.add("grid-byte-selected");
 		replaceInstructions(getByteInfoHTML(source.id));
 	}
+}
+
+function updateBitDisplay(){
+    $('#tag').html(globalCacheCPU1.getTagSize().toString());
+    $('#byteb').html(globalCacheCPU1.getByteOffsetSize().toString());
+    $('#blockb').html((globalCacheCPU1.getWordSize()-(globalCacheCPU1.getByteOffsetSize()+globalCacheCPU1.getIndexSize()+globalCacheCPU1.getTagSize())).toString())
+    $('#index').html(globalCacheCPU1.getIndexSize().toString())
 }
