@@ -101,7 +101,7 @@ function setTableEntryColors(cache, cpu) {
     // Record the cache parameters before beginning iteration
     var numLines = cache.cacheLineCount;
     var numWords = cache.wordsPerLine;
-    var numBytes = cache.wordSize;
+    var numBytes = cache.getWordSize();
 
     // Set the font color of each interior cell of the table
     for (var line = 0; line < numLines; line++) {
