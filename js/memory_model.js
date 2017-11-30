@@ -93,7 +93,7 @@ class MemoryObj {
 		this.wordSize = size;
 	}
 	setWordCount(size) {
-		this.wordCount = size;
+		this.memSize = size;
 	}
 
 	generateCache(wordsPerLine, cacheLineCount) {
