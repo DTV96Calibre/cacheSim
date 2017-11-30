@@ -161,6 +161,7 @@ function updateCaches() {
     var html = convertCacheToHTML(globalCacheCPU2, 2);
 	$('#cache-grid2')[0].innerHTML = html;
 	setTableEntryColors(globalCacheCPU2, 2);
+    updateBitDisplay();
 }
 
 $('document').ready(
@@ -230,4 +231,11 @@ function gridMouseClick(source) {
 		source.classList.add("grid-byte-selected");
 		replaceInstructions(getByteInfoHTML(source.id));
 	}
+}
+
+function updateBitDisplay(){
+    $('#tag').html(globalCacheCPU1.getTagSize().toString());
+    $('#byteb').html(globalCacheCPU1.getByteOffsetSize().toString());
+    $('#blockb').html((globalCacheCPU1.getWordSize()-(globalCacheCPU1.getByteOffsetSize()+globalCacheCPU1.getIndexSize()+globalCacheCPU1.getTagSize())).toString())
+    $('#index').html(globalCacheCPU1.getIndexSize().toString())
 }
