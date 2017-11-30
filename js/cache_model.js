@@ -27,7 +27,7 @@ class CacheWordEntry {
 	getWord() {
 		if (this.state == MsiState.Invalid) {
 			this.setShared();
-		} 
+		}
 		return this.word;
 	}
 	getBytes() {
@@ -118,12 +118,12 @@ class CacheObj {
 		// Each entry in cacheLines is an array of WordEntries.
 		// WordEntry has an array of bytes and an address.
 		this.cacheLines = [];
-		
+
 		if (parentMemory === undefined) {
 			throw "Error: parentMemory parameter not given!";
 		}
 		this.parentMemory = parentMemory;
-		
+
 		this.wordsPerLine = wordsPerLine;
 		this.cacheLineCount = cacheLineCount;
 
@@ -294,11 +294,11 @@ class CacheObj {
 	}
 
 	// These are the hooks for read/write broadcasts. THESE FUNCTIONS CANNOT CALL setWord() OR readWord()!
-	
+
 	// This returns an array of bytes if a writeback happens, or null otherwise.
 	wordModified(address) {
-		var word = findWord(address);
-		
+		var word = this.findWord(address);
+
 		if (word) {
 			return word.wordModified();
 		}
@@ -307,7 +307,7 @@ class CacheObj {
 
 	// This returns an array of bytes if a writeback happens, or null otherwise.
 	wordRead(address) {
-		var word = findWord(address);
+		var word = this.findWord(address);
 
 		if (word) {
 			return word.wordRead();

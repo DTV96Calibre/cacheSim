@@ -103,6 +103,9 @@ class MemoryObj {
 	setWordCount(size) {
 		this.memSize = size;
 	}
+	setBytes(bytes){
+		this.bytes = bytes;
+	}
 
 	// When the user is setting the word, set the sourceCache to null.
 	// Bytes is an array of four bytes.
@@ -117,12 +120,12 @@ class MemoryObj {
 		}
 
 		// Then change the word.
-		var word = getWord(address);
+		var word = this.getWord(address);
 		word.setBytes(bytes);
 	}
 
 	readWord(address, sourceCache) {
-		var word = getWord(address);
+		var word = this.getWord(address);
 
 		// First, broadcast that the value is being read.
 		for (var i = 0; i != this.getCaches().length; i++) {

@@ -240,19 +240,19 @@
 			            <div class="row">
 			              <div class="form-group"> <!-- nested form-group acting like row -->
 			                <div class="col-sm-5">
-			                  <input type="text" class="form-control" placeholder="Address">
+			                  <input id="addressField" type="text" class="form-control" placeholder="Address">
 			                </div><!-- /col-sm-6 -->
 			                <div class="col-sm-5" style="left:-5px">
-			                  <form class="form-group" method="post" action="">
-			                    <input name="word" class="form-control" placeholder="Byte Offset: 0">
-			                    <input name="word" class="form-control" placeholder="Byte Offset: 1">
-			                    <input name="word" class="form-control" placeholder="Byte Offset: 2">
-			                    <input name="word" class="form-control" placeholder="Byte Offset: 3"> </form>
+			                  <div id="wordGroup" class="form-group">
+			                    <input id="byte0" name="byte" class="form-control" placeholder="Byte Offset: 0">
+			                    <input id="byte1" name="byte" class="form-control" placeholder="Byte Offset: 1">
+			                    <input id="byte2" name="byte" class="form-control" placeholder="Byte Offset: 2">
+			                    <input id="byte3" name="byte" class="form-control" placeholder="Byte Offset: 3"> </form>
 			                  </div><!-- /col-sm-4 -->
 			                  <div class="col-sm-2" style="left:-20px">
-			                    <form class="form-inline" method="post" action="" >
-			                      <button type="submit" class="btn btn-primary">Write</button>
-			                      <button type="submit" class="btn btn-primary">Read</button>
+			                    <div class="form-inline">
+			                      <button type="submit" class="btn btn-primary" onclick="writeWordToMem()">Write</button>
+			                      <button type="submit" class="btn btn-primary" onclick="readWordFromMem()">Read</button>
 			                    </form>
 			                  </div>
 			                </div>

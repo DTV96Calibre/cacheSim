@@ -11,7 +11,7 @@ function idToWordAddress(idStr) {
 	if (matches.length != 2) {
 		console.log("Error in idToWord: Not a valid word string: '" + idStr + "'");
 	}
-	
+
 	var address = parseInt(matches[1]);
 	return address;
 }
@@ -77,3 +77,23 @@ function getMemorySize() {
 }
 
 // TODO: change updateCacheParameters to refresh the main memory instead of the caches.
+
+// Writes an array of bytes to memory at specified address.
+// Assumes operation has no source cache
+// Convenience function
+//
+function writeWordToMem(){
+	var wordGroup = $("#wordGroup")[0].getElementsByTagName("input");
+	var word = wordGroup.length*[0];
+	for (i=0;i<word.length;i++){
+		var id = parseInt(wordGroup[i].id.match("byte(\\d+)")[1]);
+		word[id] = hexToNum(wordGroup[i].innerHTML);
+	}
+	var address = hexToNum($("#addressField")[0].innerHTML);
+	globalMemory.writeWord(address, word, null);
+}
+
+function readWordFromMem(){
+	var address = hexToNum($("#addressField")[0].innerHTML);
+	return globalMemory.readWord(address, null);
+}
