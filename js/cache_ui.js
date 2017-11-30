@@ -51,10 +51,10 @@ function convertCacheToHTML(cache, cpu) {
 		var entry = "<th>" + i + "</th>";
 		byteHeader += entry;
 	}
-	
+
 	// Put together the header sections.
 	var header = "<thead>" + wordHeader + byteHeader + "</thead>";
-	
+
 	// Make each row.
 	var rows = "";
 	for (var lineNum = 0; lineNum < cache.getLineCount(); lineNum++) {
@@ -89,9 +89,12 @@ function setTableEntryColors(cache, cpu) {
 	// Local caches have distinguishable color palettes for readability
 	var colors;
 	if (cpu == 1) {
-		colors = ['#e6ecff', '#ccd9ff', '#b3c6ff', '#99b3ff'];
+		//colors = ['#e6ecff', '#ccd9ff', '#b3c6ff', '#99b3ff'];
+		//colors = ['#BFDBF7', '#AFA2F2', '#7AC4D3', '#B5FFE1'];
+		colors = ['#D9DBD2', '#ADCCC0', '#B6EFBC','#E4F2E1'];
 	} else {
-		colors = ['#e6ffe6', '#ccffcc', '#b3ffb3', '#99ff99'];
+		//colors = ['#e6ffe6', '#ccffcc', '#b3ffb3', '#99ff99'];
+		colors = ['#E4F2E1', '#B6EFBC', '#ADCCC0', '#D9DBD2'];
 	}
 
     // Record the cache parameters before beginning iteration
@@ -172,7 +175,7 @@ $('document').ready(
         var cacheLineCount = getCacheLineCount();
         globalCacheCPU1 = new CacheObj(wordSize, wordsPerLine, cacheLineCount);
         globalCacheCPU2 = new CacheObj(wordSize, wordsPerLine, cacheLineCount);
-        
+
 		updateCaches();
 
 		// Save the contents of the instructions tab in a variable. The contents
