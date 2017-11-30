@@ -152,8 +152,8 @@ function updateCacheParameters() {
 
 	var blockSize = getBlockSize();
 	var lineCount = getCacheLineCount();
-	var cpu1 = globalMemory.generateCache(lineCount, blockSize);
-	var cpu2 = globalMemory.generateCache(lineCount, blockSize);
+	var cpu1 = globalMemory.generateCache(lineCount, blockSize, globalMemory);
+	var cpu2 = globalMemory.generateCache(lineCount, blockSize, globalMemory);
 
 	// TODO: Check that convertCacheToHTML is expecting numbers as the second argument.
 	var html1 = convertCacheToHTML(cache, 1);
@@ -191,8 +191,8 @@ $('document').ready(
 		
 		// TODO: Fix this.
 		globalMemory = new MemoryObj(wordSize, 1000);
-        globalCacheCPU1 = globalMemory.generateCache(wordsPerLine, cacheLineCount);
-		globalCacheCPU2 = globalMemory.generateCache(wordsPerLine, cacheLineCount);
+        globalCacheCPU1 = globalMemory.generateCache(wordsPerLine, cacheLineCount, globalMemory);
+		globalCacheCPU2 = globalMemory.generateCache(wordsPerLine, cacheLineCount, globalMemory);
         
 		// Load the global cache into the grid UI
 		var html1 = convertCacheToHTML(globalCacheCPU1);

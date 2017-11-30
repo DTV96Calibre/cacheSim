@@ -85,8 +85,13 @@ class MemoryObj {
 	getCache(index) {
 		return this.caches[index];
 	}
+
+	setWordSize(size) {
+		this.wordSize = size;
+	}
+
 	generateCache(wordsPerLine, cacheLineCount) {
-		var cache = new CacheObj(this.getWordSize(), wordsPerLine, cacheLineCount, this);
+		var cache = new CacheObj(wordsPerLine, cacheLineCount, this);
 		this.caches.push(cache);
 		return cache;
 	}

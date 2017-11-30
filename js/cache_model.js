@@ -112,7 +112,10 @@ class CacheObj {
 		// Each entry in cacheLines is an array of WordEntries.
 		// WordEntry has an array of bytes and an address.
 		this.cacheLines = [];
-
+		
+		if (parentMemory === undefined) {
+			throw "Error: parentMemory parameter not given!";
+		}
 		this.parentMemory = parentMemory;
 		
 		this.wordsPerLine = wordsPerLine;
