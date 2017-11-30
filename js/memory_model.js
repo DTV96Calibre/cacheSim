@@ -70,10 +70,10 @@ class MemoryObj {
 	}
 
 	getWord(address) {
-		var realAddress = address - this.baseAddress;
+		var realAddress = address - this.getBaseAddress();
 		if (realAddress % this.getWordSize() != 0) {
 			console.log("Error: Attempt to access unaligned address " + address
-				+ " with: {baseAddress = " + this.baseAddress + ", wordSize = " + this.getWordSize() + "}");
+				+ " with: {baseAddress = " + this.getBaseAddress() + ", wordSize = " + this.getWordSize() + "}");
 		}
 		
 		var wordAddress = realAddress / this.getWordSize();
@@ -86,11 +86,12 @@ class MemoryObj {
 	getCache(index) {
 		return this.caches[index];
 	}
-
+	getBaseAddress() {
+		return this.baseAddress;
+	}
 	setWordSize(size) {
 		this.wordSize = size;
 	}
-
 	setWordCount(size) {
 		this.wordCount = size;
 	}
