@@ -143,12 +143,11 @@ function getCacheLineCount() {
 	return parseInt(cacheLines);
 }
 
-// TODO: Move this to js/memory_ui.js
-/* Updates the cache table according to the values set by the user.
- * @param cache: The CacheObj to update.
- * @param cpu: An int (1 or 2) describing the CPU this cache belongs to.
+// TODO: Rename.
+/*
+ * Updates all caches.
  */
-function updateCacheParameters() {
+function updateCaches() {
 	globalMemory.setWordSize(getWordSize());
 	globalMemory.setWordCount(getMemorySize());
 	globalMemory.generateWords();
@@ -158,26 +157,17 @@ function updateCacheParameters() {
 	globalCacheCPU1 = globalMemory.generateCache(blockSize, lineCount, globalMemory);
 	globalCacheCPU2 = globalMemory.generateCache(blockSize, lineCount, globalMemory);
 
+	// Purely asthetic.
+	var globalMemoryWidth = 4;
+
 	var html1 = convertCacheToHTML(globalCacheCPU1, 1);
 	var html2 = convertCacheToHTML(globalCacheCPU2, 2);
+	//var htmlMem = convertMemoryToHTML(globalMemory, globalMemoryWidth);
 	$('#cache-grid')[0].innerHTML = html1;
 	$('#cache-grid2')[0].innerHTML = html2;
+	//$('#main-memory-grid')[0].innerHTML = htmlMem;
 
 	setTableEntryColors(globalCacheCPU1, 1);
-	setTableEntryColors(globalCacheCPU2, 2);
-}
-
-/*
- * Updates all caches.
- */
-function updateCaches() {
-	updateCacheParameters(globalCacheCPU1, 1);
-	updateCacheParameters(globalCacheCPU2, 2);
-
-	// Force initial cache contents to be identical
-    globalCacheCPU2.cacheLines = globalCacheCPU1.cacheLines;
-    var html = convertCacheToHTML(globalCacheCPU2, 2);
-	$('#cache-grid2')[0].innerHTML = html;
 	setTableEntryColors(globalCacheCPU2, 2);
     updateBitDisplay();
 }
@@ -205,17 +195,8 @@ $('document').ready(
         console.log('wordsPerLine: ' + wordsPerLine);
         console.log('cacheLineCount: ' + cacheLineCount);
 		
-		// TODO: Fix this.
 		globalMemory = new MemoryObj(wordSize, 1000);
-        globalCacheCPU1 = globalMemory.generateCache(wordsPerLine, cacheLineCount, globalMemory);
-		globalCacheCPU2 = globalMemory.generateCache(wordsPerLine, cacheLineCount, globalMemory);
         
-		// Load the global cache into the grid UI
-		var html1 = convertCacheToHTML(globalCacheCPU1);
-		var html2 = convertCacheToHTML(globalCacheCPU2);
-		$('#cache-grid')[0].innerHTML = html1;
-		$('#cache-grid2')[0].innerHTML = html2;
-
 		updateCaches();
 
 		// Save the contents of the instructions tab in a variable. The contents
