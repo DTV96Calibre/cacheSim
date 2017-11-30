@@ -9,7 +9,7 @@ class MemoryWordEntry {
 		this.address = address;
 		this.parentMem = parentMem;
 	}
-	
+
 
 	getBytes() {
 		return this.bytes;
@@ -23,12 +23,19 @@ class MemoryWordEntry {
 	getAddress() {
 		return this.address;
 	}
+
+	setBytes(bytes) {
+		if (bytes.length != this.bytes.length) {
+			console.log("Error: Attempting to set word to " + bytes + " (wrong size)");
+		}
+		this.bytes = bytes;
+	}
 }
 
 // This class controls main memory, and provides methods for caches to interact
 // with each other.
 class MemoryObj {
-	
+
 	// memSize is the number of words in main memory.
 	constructor(wordSize, memSize) {
 		this.wordSize = wordSize;
@@ -75,10 +82,11 @@ class MemoryObj {
 			console.log("Error: Attempt to access unaligned address " + address
 				+ " with: {baseAddress = " + this.getBaseAddress() + ", wordSize = " + this.getWordSize() + "}");
 		}
-		
+
 		var wordAddress = realAddress / this.getWordSize();
 		return this.memory[wordAddress];
 	}
+
 
 	getCaches() {
 		return this.caches;
@@ -94,6 +102,49 @@ class MemoryObj {
 	}
 	setWordCount(size) {
 		this.memSize = size;
+	}
+	setBytes(bytes){
+		this.bytes = bytes;
+	}
+
+	// When the user is setting the word, set the sourceCache to null.
+	// Bytes is an array of four bytes.
+	writeWord(address, bytes, sourceCache) {
+		// First, broadcast that the value has changed.
+		for (var i = 0; i != this.getCaches().length; i++) {
+			var cache = this.getCaches()[i];
+			if (cache == sourceCache) {
+				continue;
+			}
+			cache.wordModified(address);
+		}
+
+		// Then change the word.
+		var word = this.getWord(address);
+		word.setBytes(bytes);
+	}
+
+	readWord(address, sourceCache) {
+		var word = this.getWord(address);
+
+		// First, broadcast that the value is being read.
+		for (var i = 0; i != this.getCaches().length; i++) {
+			var cache = this.getCaches()[i];
+			if (cache == sourceCache) {
+				continue;
+			}
+
+			// byteRead returns an array of bytes if it needs to do writeback,
+			// or null otherwise.
+			var bytes = cache.wordRead(address);
+			if (bytes) {
+				var word = word.setBytes(bytes);
+			}
+		}
+
+		// Then read the word and return the bytes.
+		return word.getBytes();
+
 	}
 
 	generateCache(wordsPerLine, cacheLineCount) {
@@ -111,7 +162,3 @@ class MemoryObj {
 		return undefined;
 	}
 }
-
-
-
-
