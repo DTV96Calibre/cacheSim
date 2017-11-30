@@ -107,9 +107,11 @@ class MemoryObj {
 		this.bytes = bytes;
 	}
 
-	// When the user is setting the word, set the sourceCache to null.
-	// Bytes is an array of four bytes.
-	writeWord(address, bytes, sourceCache) {
+	/* When the user is setting the word, set the sourceCache to null.
+	 * Bytes is an array of four bytes.
+	 * @param writeIssuer is either 'CPU 1', 'CPU 2', or 'USER'
+	 */
+	writeWord(address, bytes, sourceCache, writeIssuer) {
 		// First, broadcast that the value has changed.
 		for (var i = 0; i != this.getCaches().length; i++) {
 			var cache = this.getCaches()[i];
@@ -122,9 +124,15 @@ class MemoryObj {
 		// Then change the word.
 		var word = this.getWord(address);
 		word.setBytes(bytes);
+
+		// Broadcast to the text log
+		displayBroadcastEvent(writeIssuer + ", writeback to " + address + " word " + word);
 	}
 
-	readWord(address, sourceCache) {
+	/* Reads a word at the given address from sourceCache.
+	 * @param readIssuer is either 'CPU 1', 'CPU 2', or 'USER'
+	 */
+	readWord(address, sourceCache, readIssuer) {
 		var word = this.getWord(address);
 
 		// First, broadcast that the value is being read.
@@ -138,9 +146,13 @@ class MemoryObj {
 			// or null otherwise.
 			var bytes = cache.wordRead(address);
 			if (bytes) {
-				var word = word.setBytes(bytes);
+				var word = word.setBytes(bytes);	console.log(address);
+
 			}
 		}
+
+		// Broadcast to the text log
+		displayBroadcastEvent(readIssuer + ", read from " + address);
 
 		// Then read the word and return the bytes.
 		return word.getBytes();

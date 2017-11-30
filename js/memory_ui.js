@@ -82,18 +82,19 @@ function getMemorySize() {
 // Assumes operation has no source cache
 // Convenience function
 //
-function writeWordToMem(){
+function writeWordToMem() {
 	var wordGroup = $("#wordGroup")[0].getElementsByTagName("input");
 	var word = wordGroup.length*[0];
 	for (i=0;i<word.length;i++){
 		var id = parseInt(wordGroup[i].id.match("byte(\\d+)")[1]);
-		word[id] = hexToNum(wordGroup[i].innerHTML);
+		word[id] = hexToNum(wordGroup[i].value);
 	}
 	var address = hexToNum($("#addressField")[0].value);
-	globalMemory.writeWord(address, word, null);
+	globalMemory.writeWord(address, word, null, "USER");
 }
 
-function readWordFromMem(){
+function readWordFromMem() {
 	var address = hexToNum($("#addressField")[0].value);
-	return globalMemory.readWord(address, null);
+	console.log(address);
+	return globalMemory.readWord(address, null, "USER");
 }
