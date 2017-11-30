@@ -36,9 +36,6 @@ function idToByte(idStr) {
  */
 function convertCacheToHTML(cache, cpu) {
 
-	console.log(cache);
-	console.trace();
-
 	// First, make the column headers. They're named for each word in the table.
 	// These headers span 4 columns.
 	var wordHeader = "<tr><th></th>";
@@ -104,7 +101,7 @@ function setTableEntryColors(cache, cpu) {
     // Record the cache parameters before beginning iteration
     var numLines = cache.cacheLineCount;
     var numWords = cache.wordsPerLine;
-    var numBytes = cache.wordSize;
+    var numBytes = cache.getWordSize();
 
     // Set the font color of each interior cell of the table
     for (var line = 0; line < numLines; line++) {
@@ -192,8 +189,6 @@ $('document').ready(
         var wordSize = getWordSize();
         var wordsPerLine = getBlockSize(); // One block per line always, because associativity is always 1.
         var cacheLineCount = getCacheLineCount();
-        console.log('wordsPerLine: ' + wordsPerLine);
-        console.log('cacheLineCount: ' + cacheLineCount);
 		
 		globalMemory = new MemoryObj(wordSize, 1000);
         

@@ -137,7 +137,6 @@ class CacheObj {
 			}
 			this.cacheLines.push(line);
 		}
-		console.log(this.cacheLines.length);
 	}
 
 	// Get stats about how the cache is currently set up.
