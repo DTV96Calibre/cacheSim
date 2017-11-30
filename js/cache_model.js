@@ -247,7 +247,7 @@ class CacheObj {
 				}
 			}
 		}
-
+address.toString(2)
 		return bytes;
 	}
 
@@ -276,7 +276,6 @@ class CacheObj {
 			return 0;
 		}
 	}
-
 	// Get a particular byte in a line, indexed by byte.
 	getByte(lineNum, byteIndex) {
 		if (byteIndex >= this.getBytesPerLine()) {
@@ -294,16 +293,14 @@ class CacheObj {
 		var byteoff = this.getByteOffsetSize();
 		var blockoff = this.getBlockCount();
 		var indexoff = this.getIndexSize();
-		var lineNum = parseInt((address.toString(2)).substring(this.getAddressSize-byteoff-blockoff-indexoff-1,this.getAddressSize-byteoff-blockoff-1),2);
-		console.log("Trying to find the word at: " + lineNum);
-		var wordIndex = parseInt((address.toString(2)).substring(this.getAddressSize-byteoff-blockoff-1,this.getAddressSize-byteoff-1),2);
-		console.log("Trying to find the word at: " + wordIndex);
+		var add = address.toString(2).padStart(this.getAddressSize(), "0");
+		var lineNum = parseInt(add.substring(this.getAddressSize()-byteoff-blockoff-indexoff-1,this.getAddressSize()-byteoff-blockoff-1),2);
+		var wordIndex = parseInt((address.toString(2).padStart(this.getAddressSize(), "0")).substring(this.getAddressSize()-byteoff-blockoff-1,this.getAddressSize-byteoff-1),2);
 		word = this.getWord(lineNum,wordIndex);
 		return null;
 	}
 
 	// These are the hooks for read/write broadcasts. THESE FUNCTIONS CANNOT CALL setWord() OR readWord()!
-
 	// This returns an array of bytes if a writeback happens, or null otherwise.
 	wordModified(address) {
 		var word = this.findWord(address);

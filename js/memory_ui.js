@@ -95,6 +95,5 @@ function writeWordToMem(){
 
 function readWordFromMem(){
 	var address = hexToNum($("#addressField")[0].value);
-	console.log(address);
 	return globalMemory.readWord(address, null);
 }
