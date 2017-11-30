@@ -72,21 +72,7 @@ class CacheWordEntry {
 	// These are methods to control the MSI state, assuming this
 	// word is still pointing at the same address. If assigning
 	// a new address, use changeWord() instead.
-	setInvalid() {
-		this.state = MsiState.Invalid;
-	}
-	setShared() {
-		if (this.hasAddress) {
-			// Read the word.
-			var mem = this.parentCache.getMemory();
-			this.state = MsiState.Shared;
-			mem.bcastRead(address, this);
-			this.word = this.parentCache.getMemory().getWord(this.address);
-		} else {
-			console.log("Error: Attempt to get word with no address");
-		}
-	}
-	setModified(newBytes) {
+	modify(newBytes) {
 		if (this.state == MsiState.Invalid) {
 			console.log("Error: Attempting to modify Invalid word! Use changeWord() instead.");
 		}
@@ -101,6 +87,26 @@ class CacheWordEntry {
 	clearAddress() {
 		this.address = 0;
 		this.hasAddress = false;
+	}
+
+	// This returns an array of bytes if a writeback needs to happen, or null otherwise.
+	wordRead() {
+		if (this.state == MsiState.Modified) {
+			return this.bytes;
+		}
+		if (this.state != MsiState.Invalid) {
+			this.state = MsiState.Shared;
+		}
+		return null;
+	}
+
+	// This returns an array of bytes if a writeback needs to happen, or null otherwise.
+	wordModified() {
+		if (this.state == MsiState.Modified) {
+			return this.bytes;
+		}
+		this.state = MsiState.Invalid;
+		return null;
 	}
 
 }
@@ -214,7 +220,6 @@ class CacheObj {
 	}
 
 
-
 	// Get a particular line.
 	getLine(lineNum) {
 		if (lineNum >= this.getLineCount()) {
@@ -281,5 +286,32 @@ class CacheObj {
 		var wordIndex = Math.floor(byteIndex / this.getWordsPerLine());
 		var byteOffset = byteIndex % this.getWordsPerLine();
 		return getByteByWord(lineNum, wordIndex, byteOffset);
+	}
+
+	// Looks for a matching word, and returns it. If the word isn't in the cache, return null.
+	findWord(address) {
+		// TODO: Turn an address into index and block offset, check the tag, etc.
+	}
+
+	// These are the hooks for read/write broadcasts. THESE FUNCTIONS CANNOT CALL setWord() OR readWord()!
+	
+	// This returns an array of bytes if a writeback happens, or null otherwise.
+	wordModified(address) {
+		var word = findWord(address);
+		
+		if (word) {
+			return word.wordModified();
+		}
+		return null;
+	}
+
+	// This returns an array of bytes if a writeback happens, or null otherwise.
+	wordRead(address) {
+		var word = findWord(address);
+
+		if (word) {
+			return word.wordRead();
+		}
+		return null;
 	}
 }
