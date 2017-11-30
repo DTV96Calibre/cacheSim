@@ -169,6 +169,18 @@ function updateCaches() {
     updateBitDisplay();
 }
 
+function updateBitDisplay() {
+	var byteOffsetBits = Math.log2(getWordSize());
+	var blockOffsetBits = Math.log2(getBlockSize());
+	var indexBits = Math.log2(getCacheLineCount());
+	var tagBits = getWordSize() * 8 - byteOffsetBits - blockOffsetBits - indexBits;
+
+    $('#byteb').html(byteOffsetBits);
+    $('#blockb').html(blockOffsetBits);
+    $('#index').html(indexBits);
+    $('#tag').html(tagBits);
+}
+
 $('document').ready(
 	function() {
         Srand.seed(SEED);
@@ -236,11 +248,4 @@ function gridMouseClick(source) {
 		source.classList.add("grid-byte-selected");
 		replaceInstructions(getByteInfoHTML(source.id));
 	}
-}
-
-function updateBitDisplay(){
-    $('#tag').html(globalCacheCPU1.getTagSize().toString());
-    $('#byteb').html(globalCacheCPU1.getByteOffsetSize().toString());
-    $('#blockb').html((globalCacheCPU1.getWordSize()-(globalCacheCPU1.getByteOffsetSize()+globalCacheCPU1.getIndexSize()+globalCacheCPU1.getTagSize())).toString())
-    $('#index').html(globalCacheCPU1.getIndexSize().toString())
 }
