@@ -20,8 +20,6 @@ function idToWordAddress(idStr) {
 // Width is the number of words to display per line.
 function convertMemoryToHTML(memory, width) {
 
-	console.trace();
-	
 	// First, make the column headers. The first column is the address, and the
 	// rest are named for each word in the table.
 	var wordHeader = "<tr><th></th>";
@@ -52,15 +50,16 @@ function convertMemoryToHTML(memory, width) {
 		var address = memory.getBaseAddress() + i * memory.getWordSize();
 		var word = memory.getWord(address);
 		if (i % width == 0) {
-			wordEntry += "<tr><th>" + intToHex(address, memory.getWordSize() * 2) + "</th>";
+			wordEntry += "<tr><th>0x" + intToHex(address, memory.getWordSize() * 2) + "</th>";
 		}
 		for (var j = 0; j < memory.getWordSize(); j++) {
 			var id = wordToId(word);
-			wordEntry += "<th id=" + id + ">" + word.getBytes[i] + "</th>";
+			wordEntry += "<th id=" + id + ">" + intToHex(word.getBytes()[j], 2) + "</th>";
 		}
 		if (i % width == memory.getWordSize() - 1) {
 			wordEntry += "</tr>";
 		}
+		rows += wordEntry;
 	}
 	var body = "<tbody>" + rows + "</tbody>";
 

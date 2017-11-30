@@ -159,10 +159,10 @@ function updateCaches() {
 
 	var html1 = convertCacheToHTML(globalCacheCPU1, 1);
 	var html2 = convertCacheToHTML(globalCacheCPU2, 2);
-	//var htmlMem = convertMemoryToHTML(globalMemory, globalMemoryWidth);
+	var htmlMem = convertMemoryToHTML(globalMemory, globalMemoryWidth);
 	$('#cache-grid')[0].innerHTML = html1;
 	$('#cache-grid2')[0].innerHTML = html2;
-	//$('#main-memory-grid')[0].innerHTML = htmlMem;
+	$('#main-memory-grid')[0].innerHTML = htmlMem;
 
 	setTableEntryColors(globalCacheCPU1, 1);
 	setTableEntryColors(globalCacheCPU2, 2);
