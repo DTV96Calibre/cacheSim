@@ -108,9 +108,11 @@
                                         </div>
                                         <div class="col-sm-3">
                                           <select class="form-control" id="index-size-options">
+                                            <option value=8>8 lines</option>
                                             <option value=16>16 lines</option>
                                             <option value=32 selected>32 lines</option>
                                             <option value=64>64 lines</option>
+                                            <option value=128>128 lines</option>
                                         </select>
                                         </div>
                                         <div class="col-sm-4">
@@ -182,13 +184,13 @@
                         <div class="panel">
 
                             <ul class="nav nav-tabs" id="myTab" style="background-color: #F5F5F5 !important;">
-                                <li class="active"><a href="#cpu1" data-toggle="tab">CPU 1 Cache</a></li>
+                                <li><a href="#cpu1" data-toggle="tab">CPU 1 Cache</a></li>
                                 <li><a href="#cpu2" data-toggle="tab">CPU 2 Cache</a></li>
-                                                    <li><a href="#memory" data-toggle="tab">Main Memory</a></li>
+                                                    <li class="active"><a href="#memory" data-toggle="tab">Main Memory</a></li>
                             </ul>
                             <div class="tab-content">
                                 <!-- CPU 1 Cache Table -->
-                                <div class="tab-pane active well" id="cpu1" style="background-color: white !important; height:400px">
+                                <div class="tab-pane well" id="cpu1" style="background-color: white !important; height:400px">
                                     <div class="table-responsive table-scrollable" style="height:100%">
                                         <!-- Table start -->
                                         <table class="table table-striped" id="cache-grid">
@@ -222,7 +224,7 @@
                                 </div>
 
                                         <!-- Main Memory Table -->
-                    <div class="tab-pane well" id="memory" style="background-color: white !important; height:400px">
+                    <div class="tab-pane active well" id="memory" style="background-color: white !important; height:400px">
                         <div class="table-responsive table-scrollable" style="height:100%">
                             <!-- Table start -->
                             <table class="table table-striped" id="main-memory-grid">

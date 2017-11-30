@@ -150,7 +150,7 @@ class CacheObj {
 		return this.cacheLines.length;
 	}
 	getMemory() {
-		return this.parentMemory;
+		return this.parentMemory;bytesperline
 	}
 	getWordSize() {
 		var mem = this.getMemory();
@@ -291,11 +291,11 @@ address.toString(2)
 	findWord(address) {
 		var word = null;
 		var byteoff = this.getByteOffsetSize();
-		var blockoff = this.getBlockCount();
-		var indexoff = this.getIndexSize();
+		var blockoff = this.getWordsPerLine()/2;
+		var indexoff = Math.log2(this.getLineCount());
 		var add = address.toString(2).padStart(this.getAddressSize(), "0");
-		var lineNum = parseInt(add.substring(this.getAddressSize()-byteoff-blockoff-indexoff-1,this.getAddressSize()-byteoff-blockoff-1),2);
-		var wordIndex = parseInt((address.toString(2).padStart(this.getAddressSize(), "0")).substring(this.getAddressSize()-byteoff-blockoff-1,this.getAddressSize-byteoff-1),2);
+		var lineNum = parseInt(add.substring(this.getAddressSize()-byteoff-blockoff-indexoff,this.getAddressSize()-byteoff-blockoff),2);
+		var wordIndex = parseInt(add.substring(this.getAddressSize()-byteoff-blockoff,this.getAddressSize()-byteoff),2);
 		word = this.getWord(lineNum,wordIndex);
 		return null;
 	}

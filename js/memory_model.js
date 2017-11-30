@@ -146,7 +146,8 @@ class MemoryObj {
 			// or null otherwise.
 			var bytes = cache.wordRead(address);
 			if (bytes) {
-				var word = word.setBytes(bytes);	console.log(address);
+				var word = word.setBytes(bytes);
+				//console.log(address);
 
 			}
 		}

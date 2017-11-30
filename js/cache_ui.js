@@ -270,6 +270,5 @@ $('document').ready(
 		//$("td").tooltip();
 		$("[data-toggle='tooltip']").tooltip();
 
-		displayBroadcastEvent('sample event 1');
-		displayBroadcastEvent('sample event 2');
+
 	});
