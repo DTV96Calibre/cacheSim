@@ -40,9 +40,11 @@ function convertCacheToHTML(cache, cpu) {
 	// First, make the column headers. They're named for each word in the table.
 	// These headers span 4 columns.
 	var wordHeader = "<tr><th></th>";
-	for (var i = 0; i < cache.getWordsPerLine(); i++) {
-		var entry = "<th colspan='4'> Word " + i + " </th>";
-		wordHeader += entry;
+	for (var j = 0; j < cache.getWordSize() / 4; j++) {
+		for (var i = 0; i < cache.getWordsPerLine(); i++) {
+			var entry = "<th colspan='4'> Word " + i + " </th>";
+			wordHeader += entry;
+		}
 	}
 
 	// Next, make each byte colum header. They're named for their byte index.
