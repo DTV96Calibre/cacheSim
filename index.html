@@ -213,28 +213,36 @@
     <div class="col-md-1"></div>
 
     <div class="col-md-5">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Statistics</h4></div>
-            <div class="panel-body">
-                <small>Hit Rate</small>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%">
-                        <span class="sr-only">72% Complete</span>
-                    </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Memory Control</h4></div>
+          <div class="panel-body" >
+            <div class="row">
+              <div class="form-group"> <!-- nested form-group acting like row -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" placeholder="Address">
+                </div><!-- /col-sm-6 -->
+                <div class="col-sm-4">
+                  <form class="form-inline" method="post" action="">
+                    <input name="word" class="form-control" placeholder="Byte Offset:0">
+                    <input name="word" class="form-control" placeholder="Byte Offset:1">
+                    <input name="word" class="form-control" placeholder="Byte Offset:2">
+                    <input name="word" class="form-control" placeholder="Byte Offset:3"> </form>
+                  </div><!-- /col-sm-4 -->
+                  <div class="col-sm-4">
+                    <form class="form-inline" method="post" action="">
+                      <button type="submit" class="btn btn-primary">Write</button>
+                      <button type="submit" class="btn btn-primary">Read</button>
+                    </form>
+                  </div>
                 </div>
-                <small>Miss Rate</small>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                        <span class="sr-only">80% Complete</span>
-                    </div>
-                </div>
-            </div>
-            <!--/panel-body-->
-        </div>
-        <!--/panel-->
-    </div>
 
+              </div>
+              <!--/panel-body-->
+            </div>
+            <!--/panel-->
+          </div>
+        </div>
     <div class="col-md-5">
     </div>
     <!-- /col-span-5-->
