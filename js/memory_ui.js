@@ -89,11 +89,12 @@ function writeWordToMem(){
 		var id = parseInt(wordGroup[i].id.match("byte(\\d+)")[1]);
 		word[id] = hexToNum(wordGroup[i].innerHTML);
 	}
-	var address = hexToNum($("#addressField")[0].innerHTML);
+	var address = hexToNum($("#addressField")[0].value);
 	globalMemory.writeWord(address, word, null);
 }
 
 function readWordFromMem(){
-	var address = hexToNum($("#addressField")[0].innerHTML);
+	var address = hexToNum($("#addressField")[0].value);
+	console.log(address);
 	return globalMemory.readWord(address, null);
 }
