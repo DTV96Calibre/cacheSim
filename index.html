@@ -242,19 +242,19 @@
                             <div class="col-sm-5">
                               <input id="addressField" type="text" class="form-control" placeholder="Address">
                             </div><!-- /col-sm-6 -->
-                            <form class="col-sm-5" style="left:-5px">
+                            <div class="col-sm-5" style="left:-5px">
                               <div id="wordGroup" class="form-group">
                                 <input id="byte0" name="byte" class="form-control" placeholder="Byte Offset: 0">
                                 <input id="byte1" name="byte" class="form-control" placeholder="Byte Offset: 1">
                                 <input id="byte2" name="byte" class="form-control" placeholder="Byte Offset: 2">
                                 <input id="byte3" name="byte" class="form-control" placeholder="Byte Offset: 3"> 
-                            </form>
+                                </div>
                               </div><!-- /col-sm-4 -->
                               <div class="col-sm-2" style="left:-20px">
-                                <form class="form-inline">
+                                <div class="form-inline">
                                   <button type="submit" class="btn btn-primary" onclick="writeWordToMem()">Write</button>
                                   <button type="submit" class="btn btn-primary" onclick="readWordFromMem()">Read</button>
-                                </form>
+                                </div>
                               </div>
                             </div>
 
