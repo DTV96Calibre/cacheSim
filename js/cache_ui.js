@@ -140,6 +140,12 @@ function getCacheLineCount() {
 	return parseInt(cacheLines);
 }
 
+function getAssoc(){
+	var cacheAssocSelector = document.getElementById("assoc-size-options");
+	var assoc = cacheAssocSelector.options[cacheAssocSelector.selectedIndex].value;
+	return parseInt(assoc);
+}
+
 // TODO: Rename.
 /*
  * Updates all caches.
@@ -179,6 +185,7 @@ function updateBitDisplay() {
     $('#blockb').html(blockOffsetBits);
     $('#index').html(indexBits);
     $('#tag').html(tagBits);
+		$('#totalmem').html(getWordSize()*getBlockSize()*getCacheLineCount()*getAssoc());
 }
 
 function getByteInfoHTML(idStr) {
@@ -248,9 +255,9 @@ $('document').ready(
         var wordSize = getWordSize();
         var wordsPerLine = getBlockSize(); // One block per line always, because associativity is always 1.
         var cacheLineCount = getCacheLineCount();
-		
+
 		globalMemory = new MemoryObj(wordSize, 1000);
-        
+
 		updateCaches();
 
 		// Save the contents of the instructions tab in a variable. The contents

@@ -72,7 +72,8 @@
                                         </div>
                                         <div class="col-sm-3">
                                           <select class="form-control" id="word-size-options">
-                                            <option value=4>4 bytes</option>
+                                            <option value=2>2 bytes</option>
+                                            <option value=4 selected>4 bytes</option>
                                             <option value=8>8 bytes</option>
                                         </select>
                                         </div>
@@ -89,7 +90,8 @@
                                         </div>
                                         <div class="col-sm-3">
                                           <select class="form-control" id="block-size-options">
-                                            <option value=4>4 words</option>
+                                            <option value=2>2 words</option>
+                                            <option value=4 selected>4 words</option>
                                             <option value=8>8 words</option>
                                         </select>
                                         </div>
@@ -106,7 +108,8 @@
                                         </div>
                                         <div class="col-sm-3">
                                           <select class="form-control" id="index-size-options">
-                                            <option value=32>32 lines</option>
+                                            <option value=16>16 lines</option>
+                                            <option value=32 selected>32 lines</option>
                                             <option value=64>64 lines</option>
                                         </select>
                                         </div>
@@ -123,7 +126,9 @@
                                         </div>
                                         <div class="col-sm-3">
                                           <select class="form-control" id="assoc-size-options">
-                                            <option>1</option>
+                                            <option selected>1</option>
+                                            <option>2</option>
+                                            <option>4</option>
                                         </select>
                                         </div>
                                         <div class="col-sm-4">
@@ -131,6 +136,12 @@
                                         </div>
                                         <div class="col-sm-2" id="tag">
                                           22
+                                        </div>
+                                        <div class="col-sm-4">
+                                          <label>Memory Size (bytes):</label>
+                                        </div>
+                                        <div class="col-sm-2" id="totalmem">
+                                          512
                                         </div>
                                     </div> <!-- /dropdowns -->
                                 </div>
@@ -247,7 +258,7 @@
                                 <input id="byte0" name="byte" class="form-control" placeholder="Byte Offset: 0">
                                 <input id="byte1" name="byte" class="form-control" placeholder="Byte Offset: 1">
                                 <input id="byte2" name="byte" class="form-control" placeholder="Byte Offset: 2">
-                                <input id="byte3" name="byte" class="form-control" placeholder="Byte Offset: 3"> 
+                                <input id="byte3" name="byte" class="form-control" placeholder="Byte Offset: 3">
                                 </div>
                               </div><!-- /col-sm-4 -->
                               <div class="col-sm-2" style="left:-20px">
